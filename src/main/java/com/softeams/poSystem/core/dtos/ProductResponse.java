@@ -2,7 +2,7 @@ package com.softeams.poSystem.core.dtos;
 
 import java.math.BigDecimal;
 
-public record ProductDto(
+public record ProductResponse(
         Long id,
         String nombre,
         String marca,

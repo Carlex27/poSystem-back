@@ -40,5 +40,5 @@ public class Product {
     private BigDecimal precioMayoreo;
 
     @Column(nullable = false)
-    private Integer Stock;
+    private Integer stock;
 }

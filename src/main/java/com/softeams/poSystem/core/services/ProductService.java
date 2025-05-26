@@ -1,7 +1,11 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.dtos.ProductResponse;
+import com.softeams.poSystem.core.dtos.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
+import com.softeams.poSystem.core.mappers.ProductMapper;
 import com.softeams.poSystem.core.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,7 @@ import java.util.List;
 @Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
     //CRUD
 
     //CREATE
@@ -47,12 +52,30 @@ public class ProductService {
     }
 
     //UPDATE
-    public Product updateProduct(Long id, Product product) {
-        log.info("Updating product with id: {}", id);
-        Product existingProduct = getProductById(id);
-        existingProduct.setNombre(product.getNombre());
-        existingProduct.setMarca(product.getMarca());
-        existingProduct.setPrecio(product.getPrecio());
-        return productRepository.save(existingProduct);
+    @Transactional
+    public ProductResponse updateProduct(ProductRequest dto) {
+        log.info("Updating product with id: {}", dto.nombre());
+        Product product = productRepository.findByNombre(dto.nombre())
+                .orElseThrow(() -> new RuntimeException("Product not found with name: " + dto.nombre()));
+
+        product.setNombre(dto.nombre());
+        product.setMarca(dto.marca());
+        product.setGradosAlcohol(dto.gradosAlcohol());
+        product.setTamanio(dto.tamanio());
+        product.setPrecioNormal(dto.precioNormal());
+        product.setPrecioMayoreo(dto.precioMayoreo());
+        product.setStock(dto.stock());
+
+        Product updated = productRepository.save(product);
+
+        return productMapper.toDto(updated);
+    }
+
+    //DELETE
+    public void deleteProduct(Long id) {
+        log.info("Deleting product with id: {}", id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        productRepository.delete(product);
     }
 }
