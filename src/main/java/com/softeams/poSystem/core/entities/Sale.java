@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -22,6 +21,10 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String clientName;
+
+    private String vendedorName;
+
     @Column(nullable = false)
     private LocalDateTime saleDate;
 
@@ -32,5 +35,5 @@ public class Sale {
     private String state; // 'Mayoreo' or 'Menudeo'
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SaleItems> items;
+    private Set<SaleItem> items;
 }

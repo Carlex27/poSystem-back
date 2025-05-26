@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 @Data
 @Builder
-public class SaleItems {
+public class SaleItem {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
