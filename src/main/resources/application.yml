@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: poSystem
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/poSystem
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+
+  jpa:
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop # create-drop, create, update, validate, none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+jwt:
+  rsa-private-key: classpath:certs/privateKey.pem
+  rsa-public-key: classpath:certs/publicKey.pem
+
+  expiration-time:
+    access-token: 3600
+    refresh-token: 1296000
+
+server:
+  port: 8080
+  address: 0.0.0.0
