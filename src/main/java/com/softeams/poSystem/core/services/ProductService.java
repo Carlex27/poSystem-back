@@ -33,7 +33,7 @@ public class ProductService {
     //READ
     public List<Product> getAllProducts() {
         log.info("Fetching all products");
-        return productRepository.findAll();
+        return productRepository.findByIsActiveTrue();
     }
 
     public Product getProductById(Long id) {
@@ -72,6 +72,7 @@ public class ProductService {
         log.info("Deleting product with id: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        productRepository.delete(product);
+        product.setIsActive(false);
+        productRepository.save(product);
     }
 }

@@ -36,6 +36,7 @@ public class ProductMapper implements IProductMapper{
                 .precioNormal(product.precioNormal())
                 .precioMayoreo(product.precioMayoreo())
                 .stock(product.stock())
+                .isActive(true)
                 .build();
     }
     public List<Product> toEntity(List<ProductRequest> product) {

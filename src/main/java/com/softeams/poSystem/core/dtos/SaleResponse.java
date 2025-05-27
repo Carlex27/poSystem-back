@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record SaleRequest(
+public record SaleResponse(
+        Long id,
         String clientName,
         String vendorName,
         LocalDateTime saleDate,
         BigDecimal total,
-        String state,
-        List<SaleItemRequest> items
+        String state
 ) {
 }

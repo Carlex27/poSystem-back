@@ -1,6 +1,6 @@
 package com.softeams.poSystem.core.dtos;
 
-public record SaleItemDto(
+public record SaleItemRequest(
         Long productId,
         String productName,
         Integer quantity

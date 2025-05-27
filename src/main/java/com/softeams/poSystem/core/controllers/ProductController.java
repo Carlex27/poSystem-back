@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class ProductController {
     //CRUD operations can be added here as endpoints
     //CREATE
 
+    @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(
             @Valid
@@ -33,6 +35,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProduct(productMapper.toEntity(productRequest)));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping("/createMany")
     public ResponseEntity<?> createProducts(
             @Valid
@@ -43,6 +46,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProducts(products));
     }
     //READ
+    @PreAuthorize("hasAuthority('SCOPE_READ') or hasAuthority('SCOPE_READ_VENDEDOR')")
     @GetMapping("/findAll")
     public ResponseEntity<?> getAllProducts(
             Authentication authentication
@@ -51,6 +55,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_READ') or hasAuthority('SCOPE_READ_VENDEDOR')")
     @GetMapping("/findById/{id}")
     public ResponseEntity<?> getProductById(
             @PathVariable Long id,
@@ -59,6 +64,7 @@ public class ProductController {
         log.info("[ProductController | GetProductById] Fetching product by id: {} by: {}", id, authentication.getName());
         return ResponseEntity.ok(productService.getProductById(id));
     }
+
 
     @GetMapping("/findByMarca/{query}")
     public ResponseEntity<?> getProductsByMarca(
@@ -79,8 +85,8 @@ public class ProductController {
         log.info("[ProductController | UpdateProduct] Updating product by: {}", authentication.getName());
         return ResponseEntity.ok(productService.updateProduct(productMapper.toEntity(productRequest)));
     }
-    //DELETE
 
+    //DELETE
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(
             @PathVariable Long id,
