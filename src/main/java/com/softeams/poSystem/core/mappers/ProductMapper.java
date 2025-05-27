@@ -5,6 +5,8 @@ import com.softeams.poSystem.core.dtos.ProductResponse;
 import com.softeams.poSystem.core.entities.Product;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ProductMapper implements IProductMapper{
     public ProductResponse toDto(Product product) {
@@ -35,6 +37,14 @@ public class ProductMapper implements IProductMapper{
                 .precioMayoreo(product.precioMayoreo())
                 .stock(product.stock())
                 .build();
+    }
+    public List<Product> toEntity(List<ProductRequest> product) {
+        if (product == null) {
+            return null;
+        }
+        return product.stream()
+                .map(this::toEntity)
+                .toList();
     }
 
 }

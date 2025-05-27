@@ -41,30 +41,26 @@ public class ProductService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
-    public Product getProductByName(String name) {
-        log.info("Fetching product by name: {}", name);
-        return productRepository.findByNombre(name)
-                .orElseThrow(() -> new RuntimeException("Product not found with name: " + name));
-    }
-    public List<Product> getProductsByMarca(String marca) {
-        log.info("Fetching products by brand: {}", marca);
-        return productRepository.findAllByMarca(marca);
+
+    public List<Product> getProductsByMarcaOrNombre(String query) {
+        log.info("Fetching products by brand or name: {}", query);
+        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCase(query,query);
     }
 
     //UPDATE
     @Transactional
-    public ProductResponse updateProduct(ProductRequest dto) {
-        log.info("Updating product with id: {}", dto.nombre());
-        Product product = productRepository.findByNombre(dto.nombre())
-                .orElseThrow(() -> new RuntimeException("Product not found with name: " + dto.nombre()));
+    public ProductResponse updateProduct(Product dto) {
+        log.info("Updating product with id: {}", dto.getNombre());
+        Product product = productRepository.findByNombre(dto.getNombre())
+                .orElseThrow(() -> new RuntimeException("Product not found with name: " + dto.getNombre()));
 
-        product.setNombre(dto.nombre());
-        product.setMarca(dto.marca());
-        product.setGradosAlcohol(dto.gradosAlcohol());
-        product.setTamanio(dto.tamanio());
-        product.setPrecioNormal(dto.precioNormal());
-        product.setPrecioMayoreo(dto.precioMayoreo());
-        product.setStock(dto.stock());
+        product.setNombre(dto.getNombre());
+        product.setMarca(dto.getMarca());
+        product.setGradosAlcohol(dto.getGradosAlcohol());
+        product.setTamanio(dto.getTamanio());
+        product.setPrecioNormal(dto.getPrecioNormal());
+        product.setPrecioMayoreo(dto.getPrecioMayoreo());
+        product.setStock(dto.getStock());
 
         Product updated = productRepository.save(product);
 
