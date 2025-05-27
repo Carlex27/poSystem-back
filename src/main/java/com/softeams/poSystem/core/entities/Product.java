@@ -21,6 +21,9 @@ public class Product {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String SKU;
+
     @Column(nullable = false, length = 100)
     private String nombre;
 

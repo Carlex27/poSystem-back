@@ -1,27 +1,35 @@
 package com.softeams.poSystem.core.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
 @Entity
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SaleItem {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "sale_id")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private Sale sale;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "producto_id")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private Product product;
 
     @Column(nullable = false)

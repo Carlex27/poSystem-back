@@ -6,7 +6,6 @@ import java.util.List;
 
 public record SaleRequest(
         String clientName,
-        String vendorName,
         LocalDateTime saleDate,
         BigDecimal total,
         String state,

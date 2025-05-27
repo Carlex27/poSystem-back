@@ -14,7 +14,7 @@ public class ProductMapper implements IProductMapper{
             return null;
         }
         return new ProductResponse(
-                product.getId(),
+                product.getSKU(),
                 product.getNombre(),
                 product.getMarca(),
                 product.getGradosAlcohol(),
@@ -29,6 +29,7 @@ public class ProductMapper implements IProductMapper{
             return null;
         }
         return Product.builder()
+                .SKU(product.sku())
                 .nombre(product.nombre())
                 .marca(product.marca())
                 .gradosAlcohol(product.gradosAlcohol())
