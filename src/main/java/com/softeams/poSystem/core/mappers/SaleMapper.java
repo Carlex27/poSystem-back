@@ -1,8 +1,9 @@
 package com.softeams.poSystem.core.mappers;
 
 import com.softeams.poSystem.core.dtos.SaleItemRequest;
+import com.softeams.poSystem.core.dtos.SaleItemResponse;
 import com.softeams.poSystem.core.dtos.SaleRequest;
-import com.softeams.poSystem.core.entities.Product;
+import com.softeams.poSystem.core.dtos.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
@@ -42,6 +43,37 @@ public class SaleMapper {
                         .quantity(item.quantity())
                         .price(item.price())
                         .build())
+                .collect(Collectors.toSet());
+    }
+
+    public SaleResponse toResponse(Sale sale) {
+        log.info("Mapping Sale entity to SaleResponse: {}", sale);
+        return new SaleResponse(
+                sale.getId(),
+                sale.getClientName(),
+                sale.getVendedorName(),
+                sale.getSaleDate(),
+                sale.getTotal(),
+                sale.getState()
+        );
+    }
+    public List<SaleResponse> toResponse(List<Sale> sales) {
+        log.info("Mapping Sale entity to SaleResponse: ");
+        return sales.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public Set<SaleItemResponse> toSaleItemsResponse(Set<SaleItem> saleItems) {
+        log.info("Mapping SaleItem set to SaleItemResponse set:");
+        return saleItems.stream()
+                .map(item -> new SaleItemResponse(
+                        item.getProduct().getSKU(),
+                        item.getProduct().getNombre(),
+                        item.getProduct().getMarca(),
+                        item.getQuantity(),
+                        item.getPrice()
+                ))
                 .collect(Collectors.toSet());
     }
 }

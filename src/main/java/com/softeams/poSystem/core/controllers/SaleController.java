@@ -37,7 +37,7 @@ public class SaleController {
             Authentication authentication
     ) {
         log.info("[SaleController | GetAllSales] Fetching all sales by: {}", authentication.getName());
-        return ResponseEntity.ok(saleService.getAllSales());
+        return ResponseEntity.ok(saleMapper.toResponse(saleService.getAllSales()));
     }
     @GetMapping("/findById/{id}")
     public ResponseEntity<?> getSaleById(
@@ -45,8 +45,16 @@ public class SaleController {
             Authentication authentication
     ) {
         log.info("[SaleController | GetSaleById] Fetching sale by id: {} by: {}", id, authentication.getName());
-        return ResponseEntity.ok(saleService.getSaleById(id));
+        return ResponseEntity.ok(saleMapper.toResponse(saleService.getSaleById(id)));
     }
 
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> getSaleDetailsById(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        log.info("[SaleController | GetSaleDetailsById] Fetching sale details by id: {} by: {}", id, authentication.getName());
+        return ResponseEntity.ok(saleMapper.toSaleItemsResponse(saleService.getSaleItemsById(id)));
+    }
     //UPDATE AND DELETE NO EXISTE
 }
