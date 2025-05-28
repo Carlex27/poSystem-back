@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 
 @Service
@@ -38,6 +40,13 @@ public class SaleService {
         log.info("Fetching sale by id: {}", id);
         return saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found with id: " + id));
+    }
+
+    public Set<SaleItem> getSaleItemsById(Long id) {
+        log.info("GAAAAAAAA");
+        Sale sale = saleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sale not found with id: " + id));
+        return sale.getItems();
     }
 
     //UPDATE AND DELETE
