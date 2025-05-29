@@ -112,7 +112,6 @@ public class ProductController {
     //UPDATE
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct(
-            @Valid
             @ModelAttribute ProductRequest form,
             @RequestParam Long id,
             Authentication authentication
@@ -120,7 +119,6 @@ public class ProductController {
         log.info("[ProductController | UpdateProduct] Updating product by: {}", authentication.getName());
 
         Product product = productService.getProductById(id);
-
         MultipartFile image = form.getImagen();
         if (image != null && !image.isEmpty()) {
             try {
@@ -135,7 +133,11 @@ public class ProductController {
             }
         }
 
-        return ResponseEntity.ok(productService.updateProduct(product,id));
+
+        Product nProduct = productMapper.toEntity(form);
+        nProduct.setImagePath(product.getImagePath());
+
+        return ResponseEntity.ok(productService.updateProduct(nProduct,id));
     }
 
     //DELETE
