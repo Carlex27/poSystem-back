@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.dtos.SaleItemResponse;
 import com.softeams.poSystem.core.dtos.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class SaleService {
 
     //CREATE
     public Sale createSale(Sale sale) {
-        log.info("Creating sale: {}", sale);
+        log.info("Creating sale: {}", sale.getClientName());
         return saleRepository.save(sale);
     }
     //READ
@@ -58,6 +60,8 @@ public class SaleService {
     public SaleResponse creatingSale(Sale sale) {
         log.info("Creating sale with details:");
         Set<SaleItem> saleItems = sale.getItems();
+
+
         //Calcular el total de la venta
         BigDecimal totalAmount = saleItems.stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
@@ -66,8 +70,11 @@ public class SaleService {
         sale.setTotal(totalAmount);
 
         //Actualizar los productos en el inventario
-
         productService.updateStockAfterSale(sale.getItems());
+
+        Integer itemCount = sale.getItems().stream()
+                .mapToInt(SaleItem::getQuantity)
+                .sum();
 
         //Crear la venta en la base de datos
         Sale createdSale = createSale(sale);
@@ -78,7 +85,16 @@ public class SaleService {
                 createdSale.getVendedorName(),
                 createdSale.getSaleDate(),
                 createdSale.getTotal(),
-                createdSale.getState()
+                createdSale.getState(),
+                createdSale.getItems().stream()
+                        .map(item -> new SaleItemResponse(
+                                item.getProduct().getSKU(),
+                                item.getProduct().getNombre(),
+                                item.getProduct().getMarca(),
+                                item.getQuantity(),
+                                item.getPrice()
+                        )).collect(Collectors.toSet()),
+                itemCount
         );
     }
 }

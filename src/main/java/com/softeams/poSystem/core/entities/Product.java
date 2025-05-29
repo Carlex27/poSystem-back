@@ -47,4 +47,6 @@ public class Product {
 
     @Column(nullable = false)
     private Boolean isActive;
+
+    private String imagePath; // Optional field for product image path
 }

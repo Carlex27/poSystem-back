@@ -28,14 +28,16 @@ public class SaleItem {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "producto_id")
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
+    //@JsonIgnore
+    @EqualsAndHashCode.Include
     private Product product;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private Integer quantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
+    @EqualsAndHashCode.Include
     private BigDecimal price;
 
 

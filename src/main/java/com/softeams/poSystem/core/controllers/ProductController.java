@@ -8,12 +8,22 @@ import com.softeams.poSystem.core.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,13 +36,29 @@ public class ProductController {
     //CREATE
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createProduct(
-            @Valid
-            @RequestBody ProductRequest productRequest
+            @ModelAttribute ProductRequest form
             ) {
-        log.info("[ProductController | CreateProduct] Creating product");
-        return ResponseEntity.ok(productService.createProduct(productMapper.toEntity(productRequest)));
+        Product product = productMapper.toEntity(form);
+
+        MultipartFile image = form.getImagen();
+        if (image != null && !image.isEmpty()) {
+            try {
+                String imageName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+                Path imagePath = Paths.get("uploads/images/" + imageName);
+                Files.createDirectories(imagePath.getParent());
+                Files.copy(image.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+
+                product.setImagePath("/images/" + imageName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar la imagen");
+            }
+        }
+
+        log.info("[ProductController | CreateProduct] Creating product: {}", product.getNombre());
+        Product createdProduct = productService.createProduct(product);
+        return ResponseEntity.ok(createdProduct);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
@@ -45,6 +71,8 @@ public class ProductController {
         List<Product> products = productMapper.toEntity(productsRequest);
         return ResponseEntity.ok(productService.createProducts(products));
     }
+
+
     //READ
     @PreAuthorize("hasAuthority('SCOPE_READ') or hasAuthority('SCOPE_READ_VENDEDOR')")
     @GetMapping("/findAll")

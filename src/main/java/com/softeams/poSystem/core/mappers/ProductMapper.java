@@ -29,14 +29,14 @@ public class ProductMapper implements IProductMapper{
             return null;
         }
         return Product.builder()
-                .SKU(product.sku())
-                .nombre(product.nombre())
-                .marca(product.marca())
-                .gradosAlcohol(product.gradosAlcohol())
-                .tamanio(product.tamanio())
-                .precioNormal(product.precioNormal())
-                .precioMayoreo(product.precioMayoreo())
-                .stock(product.stock())
+                .SKU(product.getSku())
+                .nombre(product.getNombre())
+                .marca(product.getMarca())
+                .gradosAlcohol(product.getGradosAlcohol())
+                .tamanio(product.getTamanio())
+                .precioNormal(product.getPrecioNormal())
+                .precioMayoreo(product.getPrecioMayoreo())
+                .stock(product.getStock())
                 .isActive(true)
                 .build();
     }

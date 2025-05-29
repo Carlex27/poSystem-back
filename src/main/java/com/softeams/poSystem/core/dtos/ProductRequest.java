@@ -1,15 +1,23 @@
 package com.softeams.poSystem.core.dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 
-public record ProductRequest(
-        String sku,
-        String nombre,
-        String marca,
-        BigDecimal gradosAlcohol,
-        String tamanio,
-        BigDecimal precioNormal,
-        BigDecimal precioMayoreo,
-        Integer stock
-) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductRequest {
+    private String sku;
+    private String nombre;
+    private String marca;
+    private BigDecimal gradosAlcohol;
+    private String tamanio;
+    private BigDecimal precioNormal;
+    private BigDecimal precioMayoreo;
+    private Integer stock;
+    private MultipartFile imagen;
 }

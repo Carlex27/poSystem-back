@@ -24,37 +24,53 @@ public class SaleMapper {
 
     public Sale toEntity(SaleRequest saleRequest, Authentication authentication) {
         log.info("Mapping SaleRequest to Sale entity: {}", saleRequest);
+        Integer totalQuantity = saleRequest.items().stream()
+                .mapToInt(SaleItemRequest::quantity)
+                .sum();
+
         Sale sale = Sale.builder()
                 .clientName(saleRequest.clientName())
                 .vendedorName(authentication.getName())
                 .saleDate(saleRequest.saleDate())
-                .state(saleRequest.state())
+                .state(totalQuantity >= 20 ? "Mayoreo" : "Menudeo")
                 .build();
+        Set<SaleItem> items = toSaleItems(saleRequest.items(), sale);
+        log.info("a"+ items);
         sale.setItems(toSaleItems(saleRequest.items(),sale));
         return sale;
     }
 
     private Set<SaleItem> toSaleItems(List<SaleItemRequest> saleItemRequestList, Sale sale){
         log.info("Mapping SaleItemRequest list to SaleItem set: {}", saleItemRequestList);
+        Integer totalQuantity = saleItemRequestList.stream()
+                .mapToInt(SaleItemRequest::quantity)
+                .sum();
         return saleItemRequestList.stream()
-                .map(item -> SaleItem.builder()
-                        .sale(sale)
-                        .product(productService.getProductById(item.productId()))
-                        .quantity(item.quantity())
-                        .price(item.price())
-                        .build())
+                .map(item -> {
+                    var product = productService.getProductById(item.productId());
+                    return SaleItem.builder()
+                            .sale(sale)
+                            .product(product)
+                            .quantity(item.quantity())
+                            .price(totalQuantity >= 20 ? product.getPrecioMayoreo() : product.getPrecioNormal())
+                            .build();
+                })
                 .collect(Collectors.toSet());
     }
 
     public SaleResponse toResponse(Sale sale) {
-        log.info("Mapping Sale entity to SaleResponse: {}", sale);
+        log.info("Mapping Sale entity to SaleResponse: {}", sale.getId());
         return new SaleResponse(
                 sale.getId(),
                 sale.getClientName(),
                 sale.getVendedorName(),
                 sale.getSaleDate(),
                 sale.getTotal(),
-                sale.getState()
+                sale.getState(),
+                toSaleItemsResponse(sale.getItems()),
+                sale.getItems().stream()
+                        .mapToInt(SaleItem::getQuantity)
+                        .sum()
         );
     }
     public List<SaleResponse> toResponse(List<Sale> sales) {

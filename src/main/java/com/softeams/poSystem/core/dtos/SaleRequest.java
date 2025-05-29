@@ -7,8 +7,6 @@ import java.util.List;
 public record SaleRequest(
         String clientName,
         LocalDateTime saleDate,
-        BigDecimal total,
-        String state,
         List<SaleItemRequest> items
 ) {
 }

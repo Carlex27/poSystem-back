@@ -3,6 +3,7 @@ package com.softeams.poSystem.core.dtos;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public record SaleResponse(
         Long id,
@@ -10,6 +11,8 @@ public record SaleResponse(
         String vendorName,
         LocalDateTime saleDate,
         BigDecimal total,
-        String state
+        String state,
+        Set<SaleItemResponse> items,
+        Integer itemCount
 ) {
 }
