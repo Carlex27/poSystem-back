@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,6 +26,7 @@ public class ProductService implements IProductService {
     //CRUD
 
     //CREATE
+    @Transactional
     public Product createProduct(Product product) {
         log.info("Creating product: {}", product);
         return productRepository.save(product);
@@ -59,10 +61,10 @@ public class ProductService implements IProductService {
 
     //UPDATE
     @Transactional
-    public ProductResponse updateProduct(Product dto) {
+    public ProductResponse updateProduct(Product dto, Long id) {
         log.info("Updating product with id: {}", dto.getNombre());
-        Product product = productRepository.findByNombre(dto.getNombre())
-                .orElseThrow(() -> new RuntimeException("Product not found with name: " + dto.getNombre()));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         product.setSKU(dto.getSKU());
         product.setNombre(dto.getNombre());
@@ -72,6 +74,7 @@ public class ProductService implements IProductService {
         product.setPrecioNormal(dto.getPrecioNormal());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
         product.setStock(dto.getStock());
+        product.setImagePath(dto.getImagePath());
 
         Product updated = productRepository.save(product);
 
