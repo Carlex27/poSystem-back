@@ -51,9 +51,9 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
-    public List<Product> getProductsByMarcaOrNombre(String query) {
+    public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCase(query,query)
+        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCaseOrSKUContainingIgnoreCase(query,query,query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();

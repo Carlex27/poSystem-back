@@ -100,13 +100,13 @@ public class ProductController {
     }
 
 
-    @GetMapping("/findByMarca/{query}")
+    @GetMapping("/search")
     public ResponseEntity<?> getProductsByMarca(
-            @PathVariable String query,
+            @RequestParam String query,
             Authentication authentication
     ) {
         log.info("[ProductController | GetProductsByMarca] Fetching products by brand: {} by: {}", query, authentication.getName());
-        return ResponseEntity.ok(productService.getProductsByMarcaOrNombre(query));
+        return ResponseEntity.ok(productService.getProductsByMarcaOrNombreOrSKU(query));
     }
 
     //UPDATE
