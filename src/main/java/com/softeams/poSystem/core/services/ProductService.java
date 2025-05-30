@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.dtos.AltaProduct;
 import com.softeams.poSystem.core.dtos.ProductResponse;
 import com.softeams.poSystem.core.dtos.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,6 +27,7 @@ public class ProductService implements IProductService {
     //CRUD
 
     //CREATE
+    @Transactional
     public Product createProduct(Product product) {
         log.info("Creating product: {}", product);
         return productRepository.save(product);
@@ -49,9 +52,9 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
-    public List<Product> getProductsByMarcaOrNombre(String query) {
+    public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCase(query,query)
+        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCaseOrSKUContainingIgnoreCase(query,query,query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
@@ -59,10 +62,10 @@ public class ProductService implements IProductService {
 
     //UPDATE
     @Transactional
-    public ProductResponse updateProduct(Product dto) {
+    public ProductResponse updateProduct(Product dto, Long id) {
         log.info("Updating product with id: {}", dto.getNombre());
-        Product product = productRepository.findByNombre(dto.getNombre())
-                .orElseThrow(() -> new RuntimeException("Product not found with name: " + dto.getNombre()));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         product.setSKU(dto.getSKU());
         product.setNombre(dto.getNombre());
@@ -72,6 +75,7 @@ public class ProductService implements IProductService {
         product.setPrecioNormal(dto.getPrecioNormal());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
         product.setStock(dto.getStock());
+        product.setImagePath(dto.getImagePath());
 
         Product updated = productRepository.save(product);
 
@@ -103,4 +107,22 @@ public class ProductService implements IProductService {
             log.info("Updated stock for product: {}. New stock: {}", product.getNombre(), newStock);
         }
     }
+
+    //Alta product
+    @Transactional
+    public String altaProducts(List<AltaProduct> altas){
+
+        try{
+            for(AltaProduct alta : altas) {
+                Product existingProduct = productRepository.findBySKU(alta.sku());
+                existingProduct.setStock(existingProduct.getStock() + alta.cantidad());
+                productRepository.save(existingProduct);
+            }
+        }catch (Exception e){
+            log.error("Error al procesar las altas de productos: {}", e.getMessage());
+            return "Error al procesar las altas de productos: " + e.getMessage();
+        }
+        return "Altas de productos procesadas correctamente.";
+    }
+
 }
