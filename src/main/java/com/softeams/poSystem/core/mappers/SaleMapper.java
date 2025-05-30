@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,27 +23,23 @@ public class SaleMapper implements ISaleMapper{
 
     public Sale toEntity(SaleRequest saleRequest, Authentication authentication) {
         log.info("Mapping SaleRequest to Sale entity: {}", saleRequest);
-        Integer totalQuantity = saleRequest.items().stream()
-                .mapToInt(SaleItemRequest::quantity)
+        Long totalQuantity = saleRequest.items().stream()
+                .mapToLong(SaleItemRequest::quantity)
                 .sum();
-
         Sale sale = Sale.builder()
                 .clientName(saleRequest.clientName())
                 .vendedorName(authentication.getName())
                 .saleDate(saleRequest.saleDate())
                 .state(totalQuantity >= 20 ? "Mayoreo" : "Menudeo")
+                .itemCount(totalQuantity)
                 .build();
         Set<SaleItem> items = toSaleItems(saleRequest.items(), sale);
-        log.info("a"+ items);
         sale.setItems(toSaleItems(saleRequest.items(),sale));
         return sale;
     }
 
     private Set<SaleItem> toSaleItems(List<SaleItemRequest> saleItemRequestList, Sale sale){
         log.info("Mapping SaleItemRequest list to SaleItem set: {}", saleItemRequestList);
-        Integer totalQuantity = saleItemRequestList.stream()
-                .mapToInt(SaleItemRequest::quantity)
-                .sum();
         return saleItemRequestList.stream()
                 .map(item -> {
                     var product = productService.getProductById(item.productId());
@@ -50,7 +47,7 @@ public class SaleMapper implements ISaleMapper{
                             .sale(sale)
                             .product(product)
                             .quantity(item.quantity())
-                            .price(totalQuantity >= 20 ? product.getPrecioMayoreo() : product.getPrecioNormal())
+                            .price(sale.getItemCount() >= 20 ? product.getPrecioMayoreo() : product.getPrecioNormal())
                             .build();
                 })
                 .collect(Collectors.toSet());
@@ -66,9 +63,7 @@ public class SaleMapper implements ISaleMapper{
                 sale.getTotal(),
                 sale.getState(),
                 toSaleItemsResponse(sale.getItems()),
-                sale.getItems().stream()
-                        .mapToInt(SaleItem::getQuantity)
-                        .sum()
+                sale.getItemCount()
         );
     }
     public List<SaleResponse> toResponse(List<Sale> sales) {
@@ -91,30 +86,42 @@ public class SaleMapper implements ISaleMapper{
                 .collect(Collectors.toSet());
     }
 
-    public ResumeVentasDto toResumeVentasDto(long totalVentas, BigDecimal totalAmount) {
+    private SaleDashboard toSaleDashboard(Sale sale) {
+        return new SaleDashboard(
+                sale.getClientName(),
+                sale.getSaleDate(),
+                sale.getTotal(),
+                sale.getItemCount()
+        );
+    }
+
+    public ResumeVentasDto toResumeVentasDto(Long totalVentas, BigDecimal totalAmount) {
         log.info("Mapping Sale entity to ResumeVentasDto: ");
         return new ResumeVentasDto(
-                (int) totalVentas,
+                totalVentas,
                 totalAmount
         );
     }
 
     public ResumeDashboardDto toResumeDashboardDto(
-            long totalProductos,
-            long totalVentas,
+            Long totalProductos,
+            Long totalVentas,
             BigDecimal ingresosTotales,
-            long stockBajo,
+            Long stockBajo,
             List<Sale> ventasRecientes
     ) {
         log.info("Mapping Sale entity to ResumeDashboardDto: ");
         return new ResumeDashboardDto(
-                (int) totalProductos,
-                (int) totalVentas,
-                ingresosTotales,
-                (int) stockBajo,
-                ventasRecientes.stream()
-                        .map(this::toResponse)
+                totalProductos,
+                totalVentas == null ? 0 : totalVentas,
+                ingresosTotales != null ? ingresosTotales : BigDecimal.ZERO,
+                stockBajo,
+                ventasRecientes != null
+                        ? ventasRecientes.stream()
+                        .map(this::toSaleDashboard)
                         .collect(Collectors.toList())
+                        : Collections.emptyList()
         );
+
     }
 }

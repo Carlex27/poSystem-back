@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ISaleMapper {
     ResumeDashboardDto toResumeDashboardDto(
-            long totalProductos,
-            long totalVentas,
+            Long totalProductos,
+            Long totalVentas,
             BigDecimal ingresosTotales,
-            long stockBajo,
+            Long stockBajo,
             List<Sale> ventasRecientes
     );
-    ResumeVentasDto toResumeVentasDto(long totalVentas, BigDecimal totalAmount);
+    ResumeVentasDto toResumeVentasDto(Long totalVentas, BigDecimal totalAmount);
 }

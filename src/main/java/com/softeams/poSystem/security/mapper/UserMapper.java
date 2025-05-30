@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class UserMapper implements IUserMapper {
@@ -19,6 +21,7 @@ public class UserMapper implements IUserMapper {
         userEntity.setUsername(userRegistrationDto.userName());
         userEntity.setPassword(passwordEncoder.encode(userRegistrationDto.userPassword()));
         userEntity.setRoles(userRegistrationDto.userRole());
+        userEntity.setCreatedAt(LocalDateTime.now());
         return userEntity;
     }
 

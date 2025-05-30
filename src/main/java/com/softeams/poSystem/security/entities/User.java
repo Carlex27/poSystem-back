@@ -36,7 +36,7 @@ public class User {
     @Column(nullable = false)
     private String roles;
 
-    @Column()
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Schema(description = "List of refresh tokens", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

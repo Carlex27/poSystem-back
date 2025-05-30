@@ -13,6 +13,6 @@ public record SaleResponse(
         BigDecimal total,
         String state,
         Set<SaleItemResponse> items,
-        Integer itemCount
+        Long itemCount
 ) {
 }

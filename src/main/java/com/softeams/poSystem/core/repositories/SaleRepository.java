@@ -22,7 +22,7 @@ public interface SaleRepository extends JpaRepository<Sale,Long> {
     BigDecimal getTotalVentas(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("SELECT COUNT(s) FROM Sale s WHERE s.saleDate >= :start AND s.saleDate < :end")
-    long countSalesInRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    Long countSalesInRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("SELECT s FROM Sale s WHERE s.saleDate BETWEEN :startDate AND :endDate ORDER BY s.saleDate DESC")
     List<Sale> findTop3BySaleDateRange(

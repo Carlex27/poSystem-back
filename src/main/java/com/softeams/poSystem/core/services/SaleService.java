@@ -99,9 +99,6 @@ public class SaleService implements ISaleService {
         //Actualizar los productos en el inventario
         productService.updateStockAfterSale(sale.getItems());
 
-        Integer itemCount = sale.getItems().stream()
-                .mapToInt(SaleItem::getQuantity)
-                .sum();
 
         //Crear la venta en la base de datos
         Sale createdSale = createSale(sale);
@@ -121,7 +118,7 @@ public class SaleService implements ISaleService {
                                 item.getQuantity(),
                                 item.getPrice()
                         )).collect(Collectors.toSet()),
-                itemCount
+                createdSale.getItemCount()
         );
     }
 }
