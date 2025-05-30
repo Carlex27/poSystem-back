@@ -99,4 +99,22 @@ public class SaleMapper {
         );
     }
 
+    public ResumeDashboardDto toResumeDashboardDto(
+            long totalProductos,
+            long totalVentas,
+            BigDecimal ingresosTotales,
+            long stockBajo,
+            List<Sale> ventasRecientes
+    ) {
+        log.info("Mapping Sale entity to ResumeDashboardDto: ");
+        return new ResumeDashboardDto(
+                (int) totalProductos,
+                (int) totalVentas,
+                ingresosTotales,
+                (int) stockBajo,
+                ventasRecientes.stream()
+                        .map(this::toResponse)
+                        .collect(Collectors.toList())
+        );
+    }
 }

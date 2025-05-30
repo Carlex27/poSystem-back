@@ -89,6 +89,20 @@ public class SaleController {
         return ResponseEntity.ok(saleMapper.toResponse(saleService.getSalesByDate(startDateTime, endDateTime)));
     }
 
+    @GetMapping("/ResumeVentas")
+    public ResponseEntity<?> getResumeVentas(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ){
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return ResponseEntity.ok(saleMapper.toResumeVentasDto(
+                saleService.countSalesInRange(startOfDay, endOfDay),
+                saleService.getTotalVentas(startOfDay, endOfDay)
+        ));
+    }
+
+
 
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getSaleDetailsById(

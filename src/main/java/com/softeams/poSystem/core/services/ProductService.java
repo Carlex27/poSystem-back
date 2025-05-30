@@ -60,6 +60,16 @@ public class ProductService implements IProductService {
                 .toList();
     }
 
+    public Long getProductCount() {
+        log.info("Fetching product count");
+        return productRepository.countByIsActiveTrue();
+    }
+
+    public Long getLowStockCount(int threshold) {
+        log.info("Fetching low stock count for threshold: {}", threshold);
+        return productRepository.countByStockLessThanAndIsActiveTrue(threshold);
+    }
+
     //UPDATE
     @Transactional
     public ProductResponse updateProduct(Product dto, Long id) {
