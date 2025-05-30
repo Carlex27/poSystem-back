@@ -34,6 +34,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {

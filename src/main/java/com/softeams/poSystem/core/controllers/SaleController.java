@@ -17,6 +17,7 @@ import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/api/sales")
+@CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
 public class SaleController {

@@ -26,6 +26,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/auth")
 @Slf4j
 public class AuthController {
