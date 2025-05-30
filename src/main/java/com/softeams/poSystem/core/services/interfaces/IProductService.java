@@ -10,4 +10,6 @@ import java.util.Set;
 public interface IProductService {
     Product getProductById(Long id);
     void updateStockAfterSale(Set<SaleItem> products);
+    Long getLowStockCount(int threshold);
+    Long getProductCount();
 }

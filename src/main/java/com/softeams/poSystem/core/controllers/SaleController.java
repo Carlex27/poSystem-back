@@ -90,6 +90,9 @@ public class SaleController {
     }
 
 
+
+
+
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getSaleDetailsById(
             @PathVariable Long id,

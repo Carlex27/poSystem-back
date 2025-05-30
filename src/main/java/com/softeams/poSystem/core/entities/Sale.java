@@ -34,6 +34,8 @@ public class Sale {
     @Column(nullable = false)
     private String state; // 'Mayoreo' or 'Menudeo'
 
+    private Long itemCount;
+
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude

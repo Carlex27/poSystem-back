@@ -6,9 +6,12 @@ import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.repositories.SaleRepository;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
+import com.softeams.poSystem.core.services.interfaces.ISaleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SaleService {
+public class SaleService implements ISaleService {
     private final SaleRepository saleRepository;
     private final IProductService productService;
     //CRUD
@@ -59,6 +62,22 @@ public class SaleService {
         return saleRepository.findBySaleDateBetween(startDate, endDate);
     }
 
+    public BigDecimal getTotalVentas(LocalDateTime start, LocalDateTime end) {
+        log.info("Calculating total sales from {} to {}", start, end);
+        return saleRepository.getTotalVentas(start, end);
+    }
+
+    public long countSalesInRange(LocalDateTime start, LocalDateTime end) {
+        log.info("Counting sales in range from {} to {}", start, end);
+        return saleRepository.countSalesInRange(start, end);
+    }
+
+    public List<Sale> getTop3SalesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        log.info("Fetching top 3 sales by date range: {} to {}", startDate, endDate);
+        Pageable topThree = PageRequest.of(0, 3);
+        return saleRepository.findTop3BySaleDateRange(startDate, endDate, topThree);
+    }
+
     //UPDATE AND DELETE
 
     //Por logica de negocio, no se permite actualizar una venta una vez creada.
@@ -80,9 +99,6 @@ public class SaleService {
         //Actualizar los productos en el inventario
         productService.updateStockAfterSale(sale.getItems());
 
-        Integer itemCount = sale.getItems().stream()
-                .mapToInt(SaleItem::getQuantity)
-                .sum();
 
         //Crear la venta en la base de datos
         Sale createdSale = createSale(sale);
@@ -102,7 +118,7 @@ public class SaleService {
                                 item.getQuantity(),
                                 item.getPrice()
                         )).collect(Collectors.toSet()),
-                itemCount
+                createdSale.getItemCount()
         );
     }
 }

@@ -17,5 +17,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByIsActiveTrue();
     Optional<Product> findById(Long id);
     Product findBySKU(String sku);
-
+    Long countByIsActiveTrue();
+    Long countByStockLessThanAndIsActiveTrue(int threshold);
 }
