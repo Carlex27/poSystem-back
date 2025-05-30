@@ -1,9 +1,6 @@
 package com.softeams.poSystem.core.mappers;
 
-import com.softeams.poSystem.core.dtos.SaleItemRequest;
-import com.softeams.poSystem.core.dtos.SaleItemResponse;
-import com.softeams.poSystem.core.dtos.SaleRequest;
-import com.softeams.poSystem.core.dtos.SaleResponse;
+import com.softeams.poSystem.core.dtos.*;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
@@ -12,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -92,4 +90,13 @@ public class SaleMapper {
                 ))
                 .collect(Collectors.toSet());
     }
+
+    public ResumeVentasDto toResumeVentasDto(long totalVentas, BigDecimal totalAmount) {
+        log.info("Mapping Sale entity to ResumeVentasDto: ");
+        return new ResumeVentasDto(
+                (int) totalVentas,
+                totalAmount
+        );
+    }
+
 }

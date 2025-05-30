@@ -59,6 +59,16 @@ public class SaleService {
         return saleRepository.findBySaleDateBetween(startDate, endDate);
     }
 
+    public BigDecimal getTotalVentas(LocalDateTime start, LocalDateTime end) {
+        log.info("Calculating total sales from {} to {}", start, end);
+        return saleRepository.getTotalVentas(start, end);
+    }
+
+    public long countSalesInRange(LocalDateTime start, LocalDateTime end) {
+        log.info("Counting sales in range from {} to {}", start, end);
+        return saleRepository.countSalesInRange(start, end);
+    }
+
     //UPDATE AND DELETE
 
     //Por logica de negocio, no se permite actualizar una venta una vez creada.
