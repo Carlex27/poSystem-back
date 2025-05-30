@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -34,6 +36,8 @@ public class User {
     @Column(nullable = false)
     private String roles;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @Schema(description = "List of refresh tokens", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

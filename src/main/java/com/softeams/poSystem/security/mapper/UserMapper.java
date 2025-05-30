@@ -1,6 +1,7 @@
 package com.softeams.poSystem.security.mapper;
 
 
+import com.softeams.poSystem.security.dto.UserDto;
 import com.softeams.poSystem.security.dto.UserRegistrationDto;
 import com.softeams.poSystem.security.entities.User;
 import com.softeams.poSystem.security.mapper.Interface.IUserMapper;
@@ -23,5 +24,13 @@ public class UserMapper implements IUserMapper {
 
     public String encodePassword(String password){
         return passwordEncoder.encode(password);
+    }
+
+    public UserDto convertToDto(User user) {
+        return new UserDto(
+                user.getUsername(),
+                user.getRoles(),
+                user.getCreatedAt()
+        );
     }
 }

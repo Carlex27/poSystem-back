@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.dtos.AltaProduct;
 import com.softeams.poSystem.core.dtos.ProductResponse;
 import com.softeams.poSystem.core.dtos.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
@@ -106,4 +107,22 @@ public class ProductService implements IProductService {
             log.info("Updated stock for product: {}. New stock: {}", product.getNombre(), newStock);
         }
     }
+
+    //Alta product
+    @Transactional
+    public String altaProducts(List<AltaProduct> altas){
+
+        try{
+            for(AltaProduct alta : altas) {
+                Product existingProduct = productRepository.findBySKU(alta.sku());
+                existingProduct.setStock(existingProduct.getStock() + alta.cantidad());
+                productRepository.save(existingProduct);
+            }
+        }catch (Exception e){
+            log.error("Error al procesar las altas de productos: {}", e.getMessage());
+            return "Error al procesar las altas de productos: " + e.getMessage();
+        }
+        return "Altas de productos procesadas correctamente.";
+    }
+
 }

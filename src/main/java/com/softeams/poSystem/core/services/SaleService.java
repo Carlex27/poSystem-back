@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -28,6 +30,7 @@ public class SaleService {
     //CRUD
 
     //CREATE
+
     public Sale createSale(Sale sale) {
         log.info("Creating sale: {}", sale.getClientName());
         return saleRepository.save(sale);
@@ -49,6 +52,11 @@ public class SaleService {
         Sale sale = saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found with id: " + id));
         return sale.getItems();
+    }
+
+    public List<Sale> getSalesByDate(LocalDateTime startDate, LocalDateTime endDate) {
+        log.info("Fetching sales by date: {}", startDate);
+        return saleRepository.findBySaleDateBetween(startDate, endDate);
     }
 
     //UPDATE AND DELETE

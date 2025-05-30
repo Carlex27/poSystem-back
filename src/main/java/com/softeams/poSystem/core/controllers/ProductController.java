@@ -1,6 +1,7 @@
 package com.softeams.poSystem.core.controllers;
 
 
+import com.softeams.poSystem.core.dtos.AltaProduct;
 import com.softeams.poSystem.core.dtos.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.mappers.IProductMapper;
@@ -172,4 +173,16 @@ public class ProductController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
+
+    //Alta producto
+    @PostMapping("/altaProducto")
+    public ResponseEntity<?> altaProducto(
+            @Valid
+            @RequestBody List<AltaProduct> altas,
+            Authentication authentication
+    ) {
+        log.info("[ProductController | AltaProducto] Alta de producto por: {}", authentication.getName());
+        return ResponseEntity.ok(productService.altaProducts(altas));
+    }
+
 }
