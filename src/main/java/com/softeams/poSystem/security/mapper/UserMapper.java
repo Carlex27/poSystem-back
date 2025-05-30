@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -31,9 +33,15 @@ public class UserMapper implements IUserMapper {
 
     public UserDto convertToDto(User user) {
         return new UserDto(
+                user.getId(),
                 user.getUsername(),
                 user.getRoles(),
                 user.getCreatedAt()
         );
+    }
+    public List<UserDto> convertToDto(List<User> user) {
+        return user.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 }
