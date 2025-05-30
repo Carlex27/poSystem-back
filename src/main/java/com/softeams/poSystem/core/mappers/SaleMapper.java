@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class SaleMapper {
+public class SaleMapper implements ISaleMapper{
     private final IProductService productService;
 
     public Sale toEntity(SaleRequest saleRequest, Authentication authentication) {
