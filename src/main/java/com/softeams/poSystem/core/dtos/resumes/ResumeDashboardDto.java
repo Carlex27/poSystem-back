@@ -1,4 +1,4 @@
-package com.softeams.poSystem.core.dtos;
+package com.softeams.poSystem.core.dtos.resumes;
 
 import java.math.BigDecimal;
 import java.util.List;

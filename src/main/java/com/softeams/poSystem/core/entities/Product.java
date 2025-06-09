@@ -1,9 +1,6 @@
 package com.softeams.poSystem.core.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,23 +24,32 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 50)
-    private String marca;
+    @Column(name = "precio_costo", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCosto;
 
-    @Column(name = "grados_alcohol", nullable = false, precision = 4, scale = 2)
-    private BigDecimal gradosAlcohol;
-
-    @Column(nullable = false, length = 20)
-    private String tamanio; // e.g. "350ml", "1L"
-
-    @Column(name = "precio_normal", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioNormal;
+    @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioVenta;
 
     @Column(name = "precio_mayoreo", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioMayoreo;
 
     @Column(nullable = false)
+    private Integer minimoMayoreo;
+
+    @Column(nullable = false)
     private Integer stock;
+
+    private Integer stockMinimo;
+
+    @Column(length = 50)
+    private String unidadCompra;
+
+    @Column(nullable = false)
+    private Integer unidadesPorPrsentacion;
+
+    @ManyToOne
+    @JoinColumn(name = "departamento_id", nullable = false)
+    private Department department;
 
     @Column(nullable = false)
     private Boolean isActive;

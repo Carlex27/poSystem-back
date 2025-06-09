@@ -1,4 +1,4 @@
-package com.softeams.poSystem.core.dtos;
+package com.softeams.poSystem.core.dtos.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +13,12 @@ import java.math.BigDecimal;
 public class ProductRequest {
     private String sku;
     private String nombre;
-    private String marca;
-    private BigDecimal gradosAlcohol;
-    private String tamanio;
-    private BigDecimal precioNormal;
+    private BigDecimal precioCosto;
+    private BigDecimal precioVenta;
     private BigDecimal precioMayoreo;
     private Integer stock;
+    private String departamento;
+    private Integer stockMinimo;
+    private Integer minimoMayoreo;
     private MultipartFile imagen;
 }

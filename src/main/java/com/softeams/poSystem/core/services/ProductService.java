@@ -1,8 +1,7 @@
 package com.softeams.poSystem.core.services;
 
-import com.softeams.poSystem.core.dtos.AltaProduct;
-import com.softeams.poSystem.core.dtos.ProductResponse;
-import com.softeams.poSystem.core.dtos.ProductRequest;
+import com.softeams.poSystem.core.dtos.product.AltaProduct;
+import com.softeams.poSystem.core.dtos.product.ProductResponse;
 import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.mappers.ProductMapper;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -54,7 +52,7 @@ public class ProductService implements IProductService {
 
     public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrMarcaContainingIgnoreCaseOrSKUContainingIgnoreCase(query,query,query)
+        return productRepository.findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCase(query,query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
@@ -79,11 +77,11 @@ public class ProductService implements IProductService {
 
         product.setSKU(dto.getSKU());
         product.setNombre(dto.getNombre());
-        product.setMarca(dto.getMarca());
-        product.setGradosAlcohol(dto.getGradosAlcohol());
-        product.setTamanio(dto.getTamanio());
-        product.setPrecioNormal(dto.getPrecioNormal());
+        product.setPrecioCosto(dto.getPrecioCosto());
+        product.setPrecioVenta(dto.getPrecioVenta());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
+        product.setMinimoMayoreo(dto.getMinimoMayoreo());
+        product.setStockMinimo(dto.getStockMinimo());
         product.setStock(dto.getStock());
         product.setImagePath(dto.getImagePath());
 
@@ -121,7 +119,6 @@ public class ProductService implements IProductService {
     //Alta product
     @Transactional
     public String altaProducts(List<AltaProduct> altas){
-
         try{
             for(AltaProduct alta : altas) {
                 Product existingProduct = productRepository.findBySKU(alta.sku());

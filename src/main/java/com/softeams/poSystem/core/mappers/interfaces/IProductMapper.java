@@ -1,7 +1,7 @@
-package com.softeams.poSystem.core.mappers;
+package com.softeams.poSystem.core.mappers.interfaces;
 
 
-import com.softeams.poSystem.core.dtos.ProductRequest;
+import com.softeams.poSystem.core.dtos.product.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
 
 import java.util.List;

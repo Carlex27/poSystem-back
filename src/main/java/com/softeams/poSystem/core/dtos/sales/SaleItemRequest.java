@@ -1,6 +1,4 @@
-package com.softeams.poSystem.core.dtos;
-
-import java.math.BigDecimal;
+package com.softeams.poSystem.core.dtos.sales;
 
 public record SaleItemRequest(
         Long productId,

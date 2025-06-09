@@ -28,7 +28,7 @@ public class SaleItem {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "producto_id")
-    //@JsonIgnore
+    @JsonIgnore
     @EqualsAndHashCode.Include
     private Product product;
 

@@ -1,11 +1,11 @@
-package com.softeams.poSystem.core.dtos;
+package com.softeams.poSystem.core.dtos.sales;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public record SaleRequest(
-        String clientName,
+        Long clientId,
+        boolean isCreditSale,
         LocalDateTime saleDate,
         List<SaleItemRequest> items
 ) {

@@ -1,6 +1,6 @@
 package com.softeams.poSystem.core.controllers;
 
-import com.softeams.poSystem.core.dtos.SaleRequest;
+import com.softeams.poSystem.core.dtos.sales.SaleRequest;
 import com.softeams.poSystem.core.mappers.SaleMapper;
 import com.softeams.poSystem.core.services.SaleService;
 import jakarta.validation.Valid;

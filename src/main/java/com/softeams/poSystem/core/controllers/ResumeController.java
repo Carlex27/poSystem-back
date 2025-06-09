@@ -1,6 +1,6 @@
 package com.softeams.poSystem.core.controllers;
 
-import com.softeams.poSystem.core.mappers.ISaleMapper;
+import com.softeams.poSystem.core.mappers.interfaces.ISaleMapper;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
 import com.softeams.poSystem.core.services.interfaces.ISaleService;
 import lombok.RequiredArgsConstructor;
