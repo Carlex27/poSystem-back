@@ -1,0 +1,60 @@
+package com.softeams.poSystem.core.services;
+
+import com.softeams.poSystem.core.entities.Abono;
+import com.softeams.poSystem.core.entities.Client;
+import com.softeams.poSystem.core.repositories.AbonoRepository;
+import com.softeams.poSystem.core.services.interfaces.IAbonoService;
+import com.softeams.poSystem.core.services.interfaces.IClientService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class AbonoService implements IAbonoService {
+    private final AbonoRepository abonoRepository;
+    private final IClientService clientService;
+    //CRUD
+    //CREATE
+    public Abono createAbono(Abono abono) {
+        log.info("Creating abono: {}", abono);
+        return abonoRepository.save(abono);
+    }
+
+    public List<Abono> createAbono(List<Abono> abonos) {
+        log.info("Creating abonos: {}", abonos);
+        return abonoRepository.saveAll(abonos);
+    }
+
+    //READ
+    public List<Abono> getAllAbonosByClient(Long clientId) {
+        log.info("Fetching all abonos for client with id: {}", clientId);
+        return abonoRepository.findAllByIsActiveTrueAndClient(clientService.getClientById(clientId));
+    }
+
+    //UPDATE NOT REQUIRED
+    //DELETE
+    public void deleteAbono(Long id) {
+        log.info("Deleting abono with id: {}", id);
+        Abono abono = abonoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Abono not found with id: " + id));
+        abono.setActive(false);
+        abonoRepository.save(abono);
+    }
+
+    //LOGIC
+    @Transactional
+    public Abono createAbonoForClient(Long clientId, Abono abono) {
+        log.info("Creating abono for client with id: {}", clientId);
+        Client client = clientService.getClientById(clientId);
+        abono.setClient(client);
+        client.setBalance(client.getBalance().subtract(abono.getMontoAbono()));
+        clientService.updateClient(clientId, client);
+        return createAbono(abono);
+    }
+
+}

@@ -2,6 +2,7 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.entities.Client;
 import com.softeams.poSystem.core.repositories.ClientRepository;
+import com.softeams.poSystem.core.services.interfaces.IClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ClientService {
+public class ClientService implements IClientService {
     private final ClientRepository clientRepository;
 
     //CRUD
