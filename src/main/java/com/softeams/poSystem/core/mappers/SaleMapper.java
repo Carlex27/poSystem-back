@@ -10,6 +10,7 @@ import com.softeams.poSystem.core.dtos.sales.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.mappers.interfaces.ISaleMapper;
+import com.softeams.poSystem.core.services.interfaces.IClientService;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SaleMapper implements ISaleMapper {
     private final IProductService productService;
+    private final IClientService clientService;
 
     public Sale toEntity(SaleRequest saleRequest, Authentication authentication) {
         log.info("Mapping SaleRequest to Sale entity: {}", saleRequest);
@@ -34,13 +36,11 @@ public class SaleMapper implements ISaleMapper {
                 .mapToLong(SaleItemRequest::quantity)
                 .sum();
         Sale sale = Sale.builder()
-                .clientName(saleRequest.clientName())
+                .client(clientService.getClientById(saleRequest.clientId()))
                 .vendedorName(authentication.getName())
                 .saleDate(saleRequest.saleDate())
-                .state(totalQuantity >= 20 ? "Mayoreo" : "Menudeo")
                 .itemCount(totalQuantity)
                 .build();
-        Set<SaleItem> items = toSaleItems(saleRequest.items(), sale);
         sale.setItems(toSaleItems(saleRequest.items(),sale));
         return sale;
     }
@@ -54,7 +54,7 @@ public class SaleMapper implements ISaleMapper {
                             .sale(sale)
                             .product(product)
                             .quantity(item.quantity())
-                            .price(sale.getItemCount() >= 20 ? product.getPrecioMayoreo() : product.getPrecioNormal())
+                            .price(sale.getItemCount() >= product.getMinimoMayoreo() ? product.getPrecioMayoreo() : product.getPrecioVenta())
                             .build();
                 })
                 .collect(Collectors.toSet());
@@ -64,7 +64,7 @@ public class SaleMapper implements ISaleMapper {
         log.info("Mapping Sale entity to SaleResponse: {}", sale.getId());
         return new SaleResponse(
                 sale.getId(),
-                sale.getClientName(),
+                sale.getClient().getName(),
                 sale.getVendedorName(),
                 sale.getSaleDate(),
                 sale.getTotal(),
@@ -86,7 +86,6 @@ public class SaleMapper implements ISaleMapper {
                 .map(item -> new SaleItemResponse(
                         item.getProduct().getSKU(),
                         item.getProduct().getNombre(),
-                        item.getProduct().getMarca(),
                         item.getQuantity(),
                         item.getPrice()
                 ))
@@ -95,7 +94,7 @@ public class SaleMapper implements ISaleMapper {
 
     private SaleDashboard toSaleDashboard(Sale sale) {
         return new SaleDashboard(
-                sale.getClientName(),
+                sale.getClient().getName(),
                 sale.getSaleDate(),
                 sale.getTotal(),
                 sale.getItemCount()

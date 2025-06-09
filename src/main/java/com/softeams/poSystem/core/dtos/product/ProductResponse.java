@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 public record ProductResponse(
         String SKU,
         String nombre,
-        String marca,
-        BigDecimal gradosAlcohol,
-        String tamanio,
-        BigDecimal precioNormal,
+        BigDecimal precioCosto,
+        BigDecimal precioVenta,
         BigDecimal precioMayoreo,
-        Integer Stock
+        Integer Stock,
+        Integer stockMinimo,
+        Integer minimoMayoreo
 ) {
 }

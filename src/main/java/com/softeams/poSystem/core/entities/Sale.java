@@ -21,6 +21,10 @@ public class Sale {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "client_id", nullable = true)
+    private Client client;
+
     private String vendedorName;
 
     @Column(nullable = false)

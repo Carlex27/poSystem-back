@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record SaleRequest(
-        String clientName,
+        Long clientId,
+        boolean isCreditSale,
         LocalDateTime saleDate,
         List<SaleItemRequest> items
 ) {

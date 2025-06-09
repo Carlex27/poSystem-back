@@ -77,11 +77,11 @@ public class ProductService implements IProductService {
 
         product.setSKU(dto.getSKU());
         product.setNombre(dto.getNombre());
-        product.setMarca(dto.getMarca());
-        product.setGradosAlcohol(dto.getGradosAlcohol());
-        product.setTamanio(dto.getTamanio());
-        product.setPrecioVenta(dto.getPrecioNormal());
+        product.setPrecioCosto(dto.getPrecioCosto());
+        product.setPrecioVenta(dto.getPrecioVenta());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
+        product.setMinimoMayoreo(dto.getMinimoMayoreo());
+        product.setStockMinimo(dto.getStockMinimo());
         product.setStock(dto.getStock());
         product.setImagePath(dto.getImagePath());
 
@@ -119,7 +119,6 @@ public class ProductService implements IProductService {
     //Alta product
     @Transactional
     public String altaProducts(List<AltaProduct> altas){
-
         try{
             for(AltaProduct alta : altas) {
                 Product existingProduct = productRepository.findBySKU(alta.sku());

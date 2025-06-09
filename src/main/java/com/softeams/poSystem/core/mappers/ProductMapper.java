@@ -17,12 +17,12 @@ public class ProductMapper implements IProductMapper {
         return new ProductResponse(
                 product.getSKU(),
                 product.getNombre(),
-                product.getMarca(),
-                product.getGradosAlcohol(),
-                product.getTamanio(),
-                product.getPrecioNormal(),
+                product.getPrecioCosto(),
+                product.getPrecioVenta(),
                 product.getPrecioMayoreo(),
-                product.getStock()
+                product.getStock(),
+                product.getStockMinimo(),
+                product.getMinimoMayoreo()
         );
     }
     public Product toEntity(ProductRequest product) {
@@ -32,9 +32,6 @@ public class ProductMapper implements IProductMapper {
         return Product.builder()
                 .SKU(product.getSku())
                 .nombre(product.getNombre())
-                .marca(product.getMarca())
-                .gradosAlcohol(product.getGradosAlcohol())
-                .tamanio(product.getTamanio())
                 .precioNormal(product.getPrecioNormal())
                 .precioMayoreo(product.getPrecioMayoreo())
                 .stock(product.getStock())

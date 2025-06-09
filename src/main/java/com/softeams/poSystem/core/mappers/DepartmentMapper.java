@@ -36,6 +36,7 @@ public class DepartmentMapper {
             return null;
         }
         return new DepartmentDto(
+                department.getId(),
                 department.getName(),
                 department.isActive()
         );
