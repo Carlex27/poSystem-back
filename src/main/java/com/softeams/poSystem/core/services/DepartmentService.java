@@ -2,6 +2,7 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.entities.Department;
 import com.softeams.poSystem.core.repositories.DepartmentRepository;
+import com.softeams.poSystem.core.services.interfaces.IDepartmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DepartmentService {
+public class DepartmentService implements IDepartmentService {
     private final DepartmentRepository departmentRepository;
 
     //CRUD

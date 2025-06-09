@@ -31,7 +31,7 @@ public class SaleService implements ISaleService {
     //CREATE
 
     public Sale createSale(Sale sale) {
-        log.info("Creating sale: {}", sale.getClientName());
+        log.info("Creating sale: {}", sale.getSaleDate());
         return saleRepository.save(sale);
     }
     //READ
@@ -101,7 +101,7 @@ public class SaleService implements ISaleService {
         log.info("Sale created successfully with id: {}", createdSale.getId());
         return new SaleResponse(
                 createdSale.getId(),
-                createdSale.getClientName(),
+                createdSale.getClient().getName(),
                 createdSale.getVendedorName(),
                 createdSale.getSaleDate(),
                 createdSale.getTotal(),
@@ -110,7 +110,6 @@ public class SaleService implements ISaleService {
                         .map(item -> new SaleItemResponse(
                                 item.getProduct().getSKU(),
                                 item.getProduct().getNombre(),
-                                item.getProduct().getMarca(),
                                 item.getQuantity(),
                                 item.getPrice()
                         )).collect(Collectors.toSet()),

@@ -24,10 +24,10 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "precio_normal", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_costo", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioCosto;
 
-    @Column(name = "precio_normal", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioVenta;
 
     @Column(name = "precio_mayoreo", nullable = false, precision = 10, scale = 2)

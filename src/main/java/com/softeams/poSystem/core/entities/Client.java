@@ -33,10 +33,10 @@ public class Client {
 
     private BigDecimal creditLimit;
 
-    @OneToMany(mappedBy = "abono", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
-    private Set<Abono> abonos;
+    private Set<Abono> abono;
 
     private boolean isActive;
 }

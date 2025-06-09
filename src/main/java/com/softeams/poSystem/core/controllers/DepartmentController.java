@@ -27,7 +27,7 @@ public class DepartmentController {
     //CRUD
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
-    @PostMapping("/createMany")
+    @PostMapping("/create")
     public ResponseEntity<?> createDepartment(
             @Valid
             @RequestBody DepartmentDto department
