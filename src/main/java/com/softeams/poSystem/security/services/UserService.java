@@ -50,7 +50,7 @@ public class UserService {
 
     public List<User> search(String query){
         log.info("Searching for users with query: {}", query);
-        return userRepository.findByUsernameContainingIgnoreCase(query);
+        return userRepository.findByUsernameContainingIgnoreCaseOrRolesContainingIgnoreCase(query,query);
     }
 
     //UPDATE
@@ -59,6 +59,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setUsername(userDto.userName());
+        user.setRoles(userDto.userRole());
         user.setPassword(userMapper.encodePassword(userDto.userPassword()));
         return ResponseEntity.ok(userRepository.save(user));
     }
