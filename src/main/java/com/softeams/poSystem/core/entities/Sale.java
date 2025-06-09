@@ -21,17 +21,18 @@ public class Sale {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String clientName;
-
     private String vendedorName;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private LocalDateTime saleDate;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private BigDecimal total;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String state; // 'Mayoreo' or 'Menudeo'
 
     private Long itemCount;
@@ -40,4 +41,6 @@ public class Sale {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Set<SaleItem> items;
+
+    private boolean isCreditSale; // Indicates if the sale is a credit sale
 }
