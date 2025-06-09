@@ -1,8 +1,7 @@
 package com.softeams.poSystem.core.services;
 
-import com.softeams.poSystem.core.dtos.AltaProduct;
-import com.softeams.poSystem.core.dtos.ProductResponse;
-import com.softeams.poSystem.core.dtos.ProductRequest;
+import com.softeams.poSystem.core.dtos.product.AltaProduct;
+import com.softeams.poSystem.core.dtos.product.ProductResponse;
 import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.mappers.ProductMapper;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -82,7 +80,7 @@ public class ProductService implements IProductService {
         product.setMarca(dto.getMarca());
         product.setGradosAlcohol(dto.getGradosAlcohol());
         product.setTamanio(dto.getTamanio());
-        product.setPrecioNormal(dto.getPrecioNormal());
+        product.setPrecioVenta(dto.getPrecioNormal());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
         product.setStock(dto.getStock());
         product.setImagePath(dto.getImagePath());

@@ -32,4 +32,6 @@ public class Abono{
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal montoAbono;
 
+    private boolean isActive; // Indicates if the abono is active or not
+
 }

@@ -1,6 +1,12 @@
 package com.softeams.poSystem.core.mappers;
 
-import com.softeams.poSystem.core.dtos.*;
+import com.softeams.poSystem.core.dtos.resumes.ResumeDashboardDto;
+import com.softeams.poSystem.core.dtos.resumes.ResumeVentasDto;
+import com.softeams.poSystem.core.dtos.resumes.SaleDashboard;
+import com.softeams.poSystem.core.dtos.sales.SaleItemRequest;
+import com.softeams.poSystem.core.dtos.sales.SaleItemResponse;
+import com.softeams.poSystem.core.dtos.sales.SaleRequest;
+import com.softeams.poSystem.core.dtos.sales.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.services.interfaces.IProductService;

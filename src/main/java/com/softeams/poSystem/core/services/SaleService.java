@@ -1,7 +1,7 @@
 package com.softeams.poSystem.core.services;
 
-import com.softeams.poSystem.core.dtos.SaleItemResponse;
-import com.softeams.poSystem.core.dtos.SaleResponse;
+import com.softeams.poSystem.core.dtos.sales.SaleItemResponse;
+import com.softeams.poSystem.core.dtos.sales.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.repositories.SaleRepository;
@@ -12,15 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 

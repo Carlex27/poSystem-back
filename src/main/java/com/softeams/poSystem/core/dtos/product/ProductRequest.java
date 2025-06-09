@@ -1,4 +1,4 @@
-package com.softeams.poSystem.core.dtos;
+package com.softeams.poSystem.core.dtos.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
