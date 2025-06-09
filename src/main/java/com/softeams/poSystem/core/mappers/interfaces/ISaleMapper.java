@@ -1,4 +1,4 @@
-package com.softeams.poSystem.core.mappers;
+package com.softeams.poSystem.core.mappers.interfaces;
 
 import com.softeams.poSystem.core.dtos.resumes.ResumeDashboardDto;
 import com.softeams.poSystem.core.dtos.resumes.ResumeVentasDto;

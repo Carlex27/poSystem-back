@@ -9,6 +9,7 @@ import com.softeams.poSystem.core.dtos.sales.SaleRequest;
 import com.softeams.poSystem.core.dtos.sales.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
+import com.softeams.poSystem.core.mappers.interfaces.ISaleMapper;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class SaleMapper implements ISaleMapper{
+public class SaleMapper implements ISaleMapper {
     private final IProductService productService;
 
     public Sale toEntity(SaleRequest saleRequest, Authentication authentication) {

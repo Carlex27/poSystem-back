@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/departments")
 @Slf4j
+@CrossOrigin
 @RequiredArgsConstructor
 public class DepartmentController {
     private final DepartmentService departmentService;

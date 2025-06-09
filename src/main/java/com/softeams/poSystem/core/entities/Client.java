@@ -19,9 +19,6 @@ public class Client {
     @EqualsAndHashCode.Include
     private Long id;
 
-
-    private String rfc;
-
     @Column(nullable = false, length = 100)
     @EqualsAndHashCode.Include
     private String name;
@@ -39,7 +36,7 @@ public class Client {
     @OneToMany(mappedBy = "abono", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
-    private Set<Abono> items;
+    private Set<Abono> abonos;
 
     private boolean isActive;
 }

@@ -4,7 +4,7 @@ package com.softeams.poSystem.core.controllers;
 import com.softeams.poSystem.core.dtos.product.AltaProduct;
 import com.softeams.poSystem.core.dtos.product.ProductRequest;
 import com.softeams.poSystem.core.entities.Product;
-import com.softeams.poSystem.core.mappers.IProductMapper;
+import com.softeams.poSystem.core.mappers.interfaces.IProductMapper;
 
 import com.softeams.poSystem.core.services.ProductService;
 import jakarta.validation.Valid;
