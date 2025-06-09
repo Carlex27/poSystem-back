@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -106,8 +107,9 @@ public class ProductService implements IProductService {
         for(SaleItem item : products) {
             Product product = productRepository.findById(item.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found with id: " + item.getProduct().getId()));
-            int newStock = product.getStock() - item.getQuantity();
-            if (newStock < 0) {
+            BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
+            BigDecimal newStock = product.getStock().subtract(quantity);
+            if (newStock.compareTo(BigDecimal.ZERO) < 0) {
                 throw new RuntimeException("Insufficient stock for product: " + product.getNombre());
             }
             product.setStock(newStock);
@@ -122,7 +124,7 @@ public class ProductService implements IProductService {
         try{
             for(AltaProduct alta : altas) {
                 Product existingProduct = productRepository.findBySKU(alta.sku());
-                existingProduct.setStock(existingProduct.getStock() + alta.cantidad());
+                //existingProduct.setStock(existingProduct.getStock() + alta.cantidad());
                 productRepository.save(existingProduct);
             }
         }catch (Exception e){

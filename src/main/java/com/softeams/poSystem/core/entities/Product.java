@@ -30,6 +30,12 @@ public class Product {
     @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioVenta;
 
+    @Column(name = "precio_pieza", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioPiezaVenta;
+
+    @Column(name = "precio_pieza_mayoreo", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioPiezaMayoreo;
+
     @Column(name = "precio_mayoreo", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioMayoreo;
 
@@ -37,7 +43,7 @@ public class Product {
     private Integer minimoMayoreo;
 
     @Column(nullable = false)
-    private Integer stock;
+    private BigDecimal stock;
 
     private Integer stockMinimo;
 
@@ -45,7 +51,7 @@ public class Product {
     private String unidadCompra;
 
     @Column(nullable = false)
-    private Integer unidadesPorPrsentacion;
+    private Integer unidadesPorPresentacion;
 
     @ManyToOne
     @JoinColumn(name = "departamento_id", nullable = false)
