@@ -27,6 +27,8 @@ public class ProductMapper implements IProductMapper {
                 product.getPrecioVenta(),
                 product.getPrecioMayoreo(),
                 product.getStock(),
+                product.getPrecioPiezaVenta(),
+                product.getPrecioPiezaMayoreo(),
                 product.getStockMinimo(),
                 product.getMinimoMayoreo()
         );

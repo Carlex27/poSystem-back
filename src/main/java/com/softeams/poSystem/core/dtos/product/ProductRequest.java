@@ -16,6 +16,7 @@ public class ProductRequest {
     private BigDecimal precioCosto;
     private BigDecimal precioVenta;
     private BigDecimal precioMayoreo;
+    private BigDecimal precioUnidadVenta;
     private BigDecimal stock;
     private String departamento;
     private Integer stockMinimo;

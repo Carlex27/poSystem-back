@@ -11,6 +11,7 @@ public record SaleResponse(
         LocalDateTime saleDate,
         BigDecimal total,
         String state,
+        boolean isCreditSale,
         Set<SaleItemResponse> items,
         Long itemCount
 ) {

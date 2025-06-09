@@ -9,6 +9,8 @@ public record ProductResponse(
         BigDecimal precioCosto,
         BigDecimal precioVenta,
         BigDecimal precioMayoreo,
+        BigDecimal precioUnidadVenta,
+        BigDecimal precioUnidadMayoreo,
         BigDecimal Stock,
         Integer stockMinimo,
         Integer minimoMayoreo
