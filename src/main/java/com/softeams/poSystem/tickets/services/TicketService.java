@@ -7,6 +7,7 @@ import com.softeams.poSystem.tickets.entities.TicketRequest;
 import com.softeams.poSystem.tickets.entities.TicketSettings;
 import com.softeams.poSystem.tickets.generators.TicketPDFGenerator;
 import com.softeams.poSystem.tickets.repositories.TicketSettingsRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,33 @@ public class TicketService {
         File pdf = TicketPDFGenerator.generarTicketPDF(request);
         PrinterService.imprimirPDF(pdf, printerName);
     }
+
+    //CRUD
+    //CREATE TICKET SETTINGS
+    public TicketSettings createTicketSettings(TicketSettings settings) {
+        return ticketSettingsRepository.save(settings);
+    }
+
+    // READ TICKET SETTINGS
+    public TicketSettings getTicketSettings() {
+        return ticketSettingsRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
+    }
+    // UPDATE TICKET SETTINGS
+    @Transactional
+    public TicketSettings updateTicketSettings(TicketSettings settings) {
+        TicketSettings existingSettings = ticketSettingsRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
+
+        existingSettings.setNombreNegocio(settings.getNombreNegocio());
+        existingSettings.setDireccion(settings.getDireccion());
+        existingSettings.setTelefono(settings.getTelefono());
+        existingSettings.setRfc(settings.getRfc());
+        existingSettings.setMensajeFinal(settings.getMensajeFinal());
+        existingSettings.setUrl(settings.getUrl());
+
+        return ticketSettingsRepository.save(existingSettings);
+    }
+
 
 }
