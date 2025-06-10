@@ -47,8 +47,7 @@ public class Product {
 
     private Integer stockMinimo;
 
-    @Column(length = 50)
-    private String unidadCompra;
+    private Integer stockPorUnidades;
 
     @Column(nullable = false)
     private Integer unidadesPorPresentacion;

@@ -7,6 +7,7 @@ public record ClientDto(
         String name,
         String direction,
         String phoneNumber,
+        BigDecimal balance,
         BigDecimal creditLimit
 ) {
 }

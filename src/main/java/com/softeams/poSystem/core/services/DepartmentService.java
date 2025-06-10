@@ -65,6 +65,11 @@ public class DepartmentService implements IDepartmentService {
     @Transactional
     public void deleteDepartment(Long id) {
         log.info("Deleting department with id: {}", id);
+
+        if (id == 1L) {
+            throw new RuntimeException("Cannot delete the default department with id 1");
+        }
+
         Department existingDepartment = getDepartmentById(id);
         existingDepartment.setActive(false);
         departmentRepository.save(existingDepartment);

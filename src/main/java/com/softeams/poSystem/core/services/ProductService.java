@@ -2,6 +2,7 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.dtos.product.AltaProduct;
 import com.softeams.poSystem.core.dtos.product.ProductResponse;
+import com.softeams.poSystem.core.entities.InventoryEntry;
 import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.mappers.ProductMapper;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +26,7 @@ import java.util.Set;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final InventoryEntryService inventoryEntryService;
     //CRUD
 
     //CREATE
@@ -31,6 +35,7 @@ public class ProductService implements IProductService {
         log.info("Creating product: {}", product);
         return productRepository.save(product);
     }
+
     public List<Product> createProducts(List<Product> products) {
         log.info("Creating products: {}", products);
         return productRepository.saveAll(products);
@@ -53,10 +58,15 @@ public class ProductService implements IProductService {
 
     public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCase(query,query)
+        return productRepository.findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCase(query, query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
+    }
+
+    public Product getProductBySKU(String sku) {
+        log.info("Fetching product by SKU: {}", sku);
+        return productRepository.findBySKU(sku);
     }
 
     public Long getProductCount() {
@@ -104,15 +114,46 @@ public class ProductService implements IProductService {
 
     @Transactional
     public void updateStockAfterSale(Set<SaleItem> products) {
-        for(SaleItem item : products) {
+        for (SaleItem item : products) {
+            int quantityToDeduct = item.getQuantity();
+
             Product product = productRepository.findById(item.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found with id: " + item.getProduct().getId()));
-            BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
-            BigDecimal newStock = product.getStock().subtract(quantity);
-            if (newStock.compareTo(BigDecimal.ZERO) < 0) {
+
+            // 1. Obtener todas las entradas disponibles del producto (orden FIFO)
+            List<InventoryEntry> entries = inventoryEntryService
+                    .getEntriesByProductAndEntryDateAsc(product);
+
+            int remaining = quantityToDeduct;
+            for (InventoryEntry entry : entries) {
+                int disponibles = entry.getUnidadesDisponibles();
+
+                if (disponibles <= 0) continue;
+
+                int cantidadARestar = Math.min(disponibles, remaining);
+                entry.setUnidadesVendidas(entry.getUnidadesVendidas() + cantidadARestar);
+                inventoryEntryService.save(entry);
+
+                remaining -= cantidadARestar;
+
+                if (remaining <= 0) break;
+            }
+            if (remaining > 0) {
+                throw new RuntimeException("Insufficient inventory in InventoryEntry for product: " + product.getNombre());
+            }
+
+            //Update stockPorUnidades
+            Integer newStock = product.getStockPorUnidades() - item.getQuantity();
+            if (newStock < 0) {
                 throw new RuntimeException("Insufficient stock for product: " + product.getNombre());
             }
-            product.setStock(newStock);
+
+            // Update stock
+            BigDecimal newStockDecimal = BigDecimal.valueOf(newStock)
+                    .divide(BigDecimal.valueOf(product.getUnidadesPorPresentacion()), 2, RoundingMode.HALF_UP);
+
+            product.setStock(newStockDecimal);
+            product.setStockPorUnidades(newStock);
             productRepository.save(product);
             log.info("Updated stock for product: {}. New stock: {}", product.getNombre(), newStock);
         }
@@ -120,18 +161,41 @@ public class ProductService implements IProductService {
 
     //Alta product
     @Transactional
-    public String altaProducts(List<AltaProduct> altas){
-        try{
-            for(AltaProduct alta : altas) {
-                Product existingProduct = productRepository.findBySKU(alta.sku());
-                //existingProduct.setStock(existingProduct.getStock() + alta.cantidad());
-                productRepository.save(existingProduct);
+    public String altaProducts(List<AltaProduct> altas) {
+        try {
+            for (AltaProduct alta : altas) {
+                var product = productRepository.findBySKU(alta.sku());
+                InventoryEntry entrada = inventoryEntryService.registrarEntradaInventario(alta, product);
+
+                int unidadesAgregadas = entrada.getUnidadesAgregadas();
+
+                Integer newStock = product.getStockPorUnidades() + unidadesAgregadas;
+
+                BigDecimal newStockDecimal = BigDecimal.valueOf(newStock)
+                        .divide(BigDecimal.valueOf(product.getUnidadesPorPresentacion()), 2, RoundingMode.HALF_UP);
+
+                product.setStock(newStockDecimal);
+                product.setStockPorUnidades(newStock);
+                productRepository.save(product);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Error al procesar las altas de productos: {}", e.getMessage());
             return "Error al procesar las altas de productos: " + e.getMessage();
         }
         return "Altas de productos procesadas correctamente.";
     }
+
+    public void createInventoryEntry(Product product) {
+        inventoryEntryService.save(
+                InventoryEntry.builder()
+                        .entryDate(LocalDateTime.now())
+                        .producto(product)
+                        .cajasCompradas(product.getStock().intValue())
+                        .precioPorCaja(product.getPrecioCosto())
+                        .unidadesVendidas(0)
+                        .build()
+        );
+    }
+
 
 }

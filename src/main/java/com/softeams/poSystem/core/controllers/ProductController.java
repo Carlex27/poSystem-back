@@ -66,7 +66,8 @@ public class ProductController {
 
         log.info("[ProductController | CreateProduct] Creating product: {}", product.getNombre());
         Product createdProduct = productService.createProduct(product);
-        return ResponseEntity.ok(createdProduct);
+        productService.createInventoryEntry(product);
+        return ResponseEntity.ok(productMapper.toDto(createdProduct));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
@@ -77,7 +78,7 @@ public class ProductController {
     ) {
         log.info("[ProductController | CreateProducts] Creating product");
         List<Product> products = productMapper.toEntity(productsRequest);
-        return ResponseEntity.ok(productService.createProducts(products));
+        return ResponseEntity.ok(productMapper.toDto(productService.createProducts(products)));
     }
 
 
@@ -88,7 +89,7 @@ public class ProductController {
             Authentication authentication
     ) {
         log.info("[ProductController | GetAllProducts] Fetching all products by: {}", authentication.getName());
-        return ResponseEntity.ok(productService.getAllProducts());
+        return ResponseEntity.ok(productMapper.toDto(productService.getAllProducts()));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ') or hasAuthority('SCOPE_READ_VENDEDOR')")
@@ -98,7 +99,7 @@ public class ProductController {
             Authentication authentication
     ) {
         log.info("[ProductController | GetProductById] Fetching product by id: {} by: {}", id, authentication.getName());
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productMapper.toDto(productService.getProductById(id)));
     }
 
 
@@ -108,7 +109,7 @@ public class ProductController {
             Authentication authentication
     ) {
         log.info("[ProductController | GetProductsByMarca] Fetching products by brand: {} by: {}", query, authentication.getName());
-        return ResponseEntity.ok(productService.getProductsByMarcaOrNombreOrSKU(query));
+        return ResponseEntity.ok(productMapper.toDto(productService.getProductsByMarcaOrNombreOrSKU(query)));
     }
 
     //UPDATE

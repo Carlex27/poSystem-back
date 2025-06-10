@@ -95,6 +95,11 @@ public class SaleService implements ISaleService {
         //Actualizar los productos en el inventario
         productService.updateStockAfterSale(sale.getItems());
 
+        //Asignar el balance al cliente si es una venta a crédito
+        if (sale.isCreditSale() && sale.getClient() != null) {
+            log.info("Updating client balance for credit sale");
+            sale.getClient().setBalance(sale.getClient().getBalance().add(totalAmount));
+        }
 
         //Crear la venta en la base de datos
         Sale createdSale = createSale(sale);
@@ -105,7 +110,7 @@ public class SaleService implements ISaleService {
                 createdSale.getVendedorName(),
                 createdSale.getSaleDate(),
                 createdSale.getTotal(),
-                createdSale.getState(),
+                createdSale.isCreditSale(),
                 createdSale.getItems().stream()
                         .map(item -> new SaleItemResponse(
                                 item.getProduct().getSKU(),

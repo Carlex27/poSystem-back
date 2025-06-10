@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -83,5 +84,15 @@ public class ClientController {
         log.info("[ClientController | DeleteClient] Deleting client by id: {}", id);
         clientService.deleteClient(id);
         return ResponseEntity.ok("Client deleted successfully");
+    }
+
+    //LOGIC
+    @PostMapping("/abonar")
+    public ResponseEntity<?> abonar(
+            @RequestParam Long id,
+            @RequestParam BigDecimal abono
+            ) {
+        log.info("[ClientController | Abonar] Abonando client by id: {} with amount: {}", id, abono);
+        return ResponseEntity.ok(clientService.abonar(id, abono));
     }
 }

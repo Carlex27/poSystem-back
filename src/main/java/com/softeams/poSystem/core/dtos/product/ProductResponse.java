@@ -3,7 +3,8 @@ package com.softeams.poSystem.core.dtos.product;
 import java.math.BigDecimal;
 
 public record ProductResponse(
-        String SKU,
+        Long id,
+        String sku,
         String nombre,
         String departamento,
         BigDecimal precioCosto,
@@ -11,8 +12,11 @@ public record ProductResponse(
         BigDecimal precioMayoreo,
         BigDecimal precioUnidadVenta,
         BigDecimal precioUnidadMayoreo,
-        BigDecimal Stock,
+        Integer unidadesPorPresentacion,
+        BigDecimal stock,
+        Integer stockPorUnidad,
         Integer stockMinimo,
-        Integer minimoMayoreo
+        Integer minimoMayoreo,
+        String imagePath
 ) {
 }
