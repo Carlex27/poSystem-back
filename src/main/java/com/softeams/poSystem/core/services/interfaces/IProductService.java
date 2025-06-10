@@ -12,4 +12,5 @@ public interface IProductService {
     void updateStockAfterSale(Set<SaleItem> products);
     Long getLowStockCount(int threshold);
     Long getProductCount();
+    Product getProductBySKU(String sku);
 }

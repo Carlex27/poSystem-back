@@ -66,6 +66,7 @@ public class ProductController {
 
         log.info("[ProductController | CreateProduct] Creating product: {}", product.getNombre());
         Product createdProduct = productService.createProduct(product);
+        productService.createInventoryEntry(product);
         return ResponseEntity.ok(productMapper.toDto(createdProduct));
     }
 

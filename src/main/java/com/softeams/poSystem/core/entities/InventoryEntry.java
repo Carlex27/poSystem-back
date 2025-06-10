@@ -31,6 +31,7 @@ public class InventoryEntry {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precioPorCaja;
 
+    @Column(nullable = false)
     private Integer unidadesVendidas;
 
     public BigDecimal getTotalCompra() {
