@@ -71,6 +71,10 @@ public class UserService {
 
     public ResponseEntity<?> deleteUserById(Long id){
         log.info("Deleting user with id: {}", id);
+        if(id == 1L){
+            log.error("Cannot delete default user");
+            return ResponseEntity.badRequest().body("Cannot delete default user");
+        }
         userRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

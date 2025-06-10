@@ -65,8 +65,13 @@ public class ClientService implements IClientService {
     @Transactional
     public void deleteClient(Long id) {
         log.info("Deleting client with id: {}", id);
+
+        if(id == 1L){
+            throw new RuntimeException("Cannot delete the default client with id 1");
+        }
         Client existingClient = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
+        // Soft delete: set active to false
         existingClient.setActive(false);
         clientRepository.save(existingClient);
     }
