@@ -16,14 +16,25 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
 
     List<InventoryEntry> findByProductoOrderByEntryDateAsc(Product product);
 
-    @Query("SELECT SUM(e.precioPorCaja * e.cajasCompradas) " +
-            "FROM InventoryEntry e WHERE e.producto.id = :productId")
-    BigDecimal calcularValorTotalInventarioPorProducto(@Param("productId") Long productId);
+    @Query("""
+    SELECT SUM(
+        e.precioPorCaja *
+        ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) / e.producto.unidadesPorPresentacion)
+    )
+    FROM InventoryEntry e
+    WHERE e.producto.id = :productId
+    """)
+    BigDecimal calcularValorInventarioDisponiblePorProducto(@Param("productId") Long productId);
 
-    @Query("SELECT SUM(e.precioPorCaja * e.cajasCompradas) FROM InventoryEntry e")
-    BigDecimal calcularValorTotalInventario();
 
-    @Query("SELECT SUM(e.cajasCompradas) FROM InventoryEntry e")
-    Integer calcularTotalCajasCompradas();
+    @Query("""
+    SELECT SUM(
+        e.precioPorCaja *
+        ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) / e.producto.unidadesPorPresentacion)
+    )
+    FROM InventoryEntry e
+    """)
+    BigDecimal calcularValorInventarioDisponible();
+
 
 }

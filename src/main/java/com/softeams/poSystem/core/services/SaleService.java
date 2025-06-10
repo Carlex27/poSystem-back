@@ -2,6 +2,8 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.dtos.sales.SaleItemResponse;
 import com.softeams.poSystem.core.dtos.sales.SaleResponse;
+import com.softeams.poSystem.core.entities.InventoryEntry;
+import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.entities.SaleItem;
 import com.softeams.poSystem.core.repositories.SaleRepository;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 public class SaleService implements ISaleService {
     private final SaleRepository saleRepository;
     private final IProductService productService;
+    private final InventoryEntryService inventoryEntryService;
     //CRUD
 
     //CREATE
@@ -121,4 +125,57 @@ public class SaleService implements ISaleService {
                 createdSale.getItemCount()
         );
     }
+    public BigDecimal calcularCostoRealVentaFIFO(Product producto, int cantidadVendida) {
+        List<InventoryEntry> entradas = inventoryEntryService.getEntriesByProductAndEntryDateAsc(producto);
+        int restantes = cantidadVendida;
+        BigDecimal costoTotal = BigDecimal.ZERO;
+
+        for (InventoryEntry entry : entradas) {
+            int disponibles = entry.getUnidadesAgregadas() - entry.getUnidadesVendidas();
+
+            if (disponibles <= 0) continue;
+
+            int usar = Math.min(restantes, disponibles);
+
+            BigDecimal costoUnidad = entry.getPrecioPorCaja()
+                    .divide(BigDecimal.valueOf(producto.getUnidadesPorPresentacion()), 4, RoundingMode.HALF_UP);
+
+            BigDecimal costo = costoUnidad.multiply(BigDecimal.valueOf(usar));
+            costoTotal = costoTotal.add(costo);
+
+            restantes -= usar;
+            if (restantes == 0) break;
+        }
+
+        if (restantes > 0) {
+            throw new RuntimeException("Inventario insuficiente para calcular costo real de venta");
+        }
+
+        return costoTotal;
+    }
+
+    public BigDecimal calcularUtilidadConFIFO(SaleItem item) {
+        Product producto = item.getProduct();
+        int cantidadVendida = item.getQuantity();
+        BigDecimal precioUnitarioAplicado = item.getPrice();
+
+        // 1. Costo real total usando FIFO
+        BigDecimal costoTotal = calcularCostoRealVentaFIFO(producto, cantidadVendida);
+
+        // 2. Ingreso total
+        BigDecimal ingreso = precioUnitarioAplicado.multiply(BigDecimal.valueOf(cantidadVendida));
+
+        // 3. Utilidad
+        return ingreso.subtract(costoTotal);
+    }
+
+
+    public BigDecimal calcularUtilidadVenta(Sale venta) {
+        return venta.getItems().stream()
+                .map(this::calcularUtilidadConFIFO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+
 }

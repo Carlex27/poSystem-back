@@ -28,13 +28,13 @@ public class TicketSettingsController {
         return ResponseEntity.ok(ticketService.createTicketSettings(ticketSettingsMapper.toEntity(ticketSettingsDto)));
     }
     //READ
-    @PostMapping("/findAll")
+    @GetMapping("/findAll")
     public ResponseEntity<?> getAllTicketSettings() {
         log.info("[TicketSettingsController | getAllTicketSettings] Fetching all ticket settings");
         return ResponseEntity.ok(ticketSettingsMapper.toDto(ticketService.getTicketSettings()));
     }
     //UPDATE
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateTicketSettings(
             @Valid
             @RequestBody
