@@ -85,15 +85,28 @@ public class ProductService implements IProductService {
         log.info("Updating product with id: {}", dto.getNombre());
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        BigDecimal precioPiezaMayoreo = dto.getPrecioMayoreo()
+                .divide(
+                        new BigDecimal(dto.getUnidadesPorPresentacion()),
+                        2, // scale: number of decimal places
+                        BigDecimal.ROUND_HALF_UP // rounding mode
+                );
+        BigDecimal stockPorUnidades = dto.getStock()
+                .multiply(BigDecimal.valueOf(dto.getUnidadesPorPresentacion()));
+
 
         product.setSKU(dto.getSKU());
         product.setNombre(dto.getNombre());
         product.setPrecioCosto(dto.getPrecioCosto());
         product.setPrecioVenta(dto.getPrecioVenta());
         product.setPrecioMayoreo(dto.getPrecioMayoreo());
-        product.setMinimoMayoreo(dto.getMinimoMayoreo());
-        product.setStockMinimo(dto.getStockMinimo());
+        product.setPrecioPiezaVenta(dto.getPrecioPiezaVenta());
         product.setStock(dto.getStock());
+        product.setUnidadesPorPresentacion(dto.getUnidadesPorPresentacion());
+        product.setStockMinimo(dto.getStockMinimo());
+        product.setMinimoMayoreo(dto.getMinimoMayoreo());
+        product.setPrecioPiezaMayoreo(precioPiezaMayoreo);
+        product.setStockPorUnidades(stockPorUnidades.intValue());
         product.setImagePath(dto.getImagePath());
 
         Product updated = productRepository.save(product);
