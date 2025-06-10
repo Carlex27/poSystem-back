@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -107,12 +108,19 @@ public class ProductService implements IProductService {
         for(SaleItem item : products) {
             Product product = productRepository.findById(item.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found with id: " + item.getProduct().getId()));
-            BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
-            BigDecimal newStock = product.getStock().subtract(quantity);
-            if (newStock.compareTo(BigDecimal.ZERO) < 0) {
+
+            //Update stockPorUnidades
+            Integer newStock = product.getStockPorUnidades() - item.getQuantity();
+            if (newStock < 0) {
                 throw new RuntimeException("Insufficient stock for product: " + product.getNombre());
             }
-            product.setStock(newStock);
+
+            // Update stock
+            BigDecimal newStockDecimal = BigDecimal.valueOf(newStock)
+                .divide(BigDecimal.valueOf(product.getUnidadesPorPresentacion()), 2, RoundingMode.HALF_UP);
+
+            product.setStock(newStockDecimal);
+            product.setStockPorUnidades(newStock);
             productRepository.save(product);
             log.info("Updated stock for product: {}. New stock: {}", product.getNombre(), newStock);
         }

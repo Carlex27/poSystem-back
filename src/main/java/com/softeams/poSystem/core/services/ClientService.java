@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -68,6 +69,21 @@ public class ClientService implements IClientService {
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
         existingClient.setActive(false);
         clientRepository.save(existingClient);
+    }
+
+    //LOGIC
+    @Transactional
+    public String abonar(Long id, BigDecimal abono){
+        log.info("Abonando {} al cliente con id: {}", abono, id);
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+
+        BigDecimal nuevoSaldo = client.getBalance().subtract(abono);
+        client.setBalance(nuevoSaldo);
+        clientRepository.save(client);
+
+        return "Abono realizado correctamente. Nuevo saldo: " + nuevoSaldo;
+
     }
 
 }

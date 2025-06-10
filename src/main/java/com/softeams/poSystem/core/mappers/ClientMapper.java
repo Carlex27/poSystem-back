@@ -28,6 +28,7 @@ public class ClientMapper {
                 .name(dto.name())
                 .phone(dto.phoneNumber())
                 .direction(dto.direction())
+                .balance(BigDecimal.ZERO)
                 .creditLimit(creditLimit)
                 .isActive(true)
                 .build();
@@ -51,6 +52,7 @@ public class ClientMapper {
                 client.getName(),
                 client.getPhone(),
                 client.getDirection(),
+                client.getBalance(),
                 client.getCreditLimit()
         );
     }

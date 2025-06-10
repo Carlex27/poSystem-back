@@ -36,7 +36,25 @@ public class SaleMapper implements ISaleMapper {
                 .mapToLong(SaleItemRequest::quantity)
                 .sum();
         Sale sale = Sale.builder()
+                .client(clientService.getClientById(1L))
+                .vendedorName(authentication.getName())
+                .saleDate(saleRequest.saleDate())
+                .itemCount(totalQuantity)
+                .build();
+        sale.setItems(toSaleItems(saleRequest.items(),sale));
+        return sale;
+    }
+
+
+
+    public Sale toEntity(SaleRequest saleRequest, Authentication authentication, boolean isCreditSale) {
+        log.info("Mapping SaleRequest to Sale entity: {}", saleRequest);
+        Long totalQuantity = saleRequest.items().stream()
+                .mapToLong(SaleItemRequest::quantity)
+                .sum();
+        Sale sale = Sale.builder()
                 .client(clientService.getClientById(saleRequest.clientId()))
+                .isCreditSale(isCreditSale)
                 .vendedorName(authentication.getName())
                 .saleDate(saleRequest.saleDate())
                 .itemCount(totalQuantity)
@@ -54,7 +72,7 @@ public class SaleMapper implements ISaleMapper {
                             .sale(sale)
                             .product(product)
                             .quantity(item.quantity())
-                            .price(sale.getItemCount() >= product.getMinimoMayoreo() ? product.getPrecioMayoreo() : product.getPrecioVenta())
+                            .price(sale.getItemCount() >= product.getMinimoMayoreo() ? product.getPrecioPiezaMayoreo() : product.getPrecioPiezaVenta())
                             .build();
                 })
                 .collect(Collectors.toSet());
@@ -68,7 +86,7 @@ public class SaleMapper implements ISaleMapper {
                 sale.getVendedorName(),
                 sale.getSaleDate(),
                 sale.getTotal(),
-                sale.getState(),
+                false, // Not a credit sale
                 toSaleItemsResponse(sale.getItems()),
                 sale.getItemCount()
         );

@@ -35,10 +35,7 @@ public class Sale {
     @EqualsAndHashCode.Include
     private BigDecimal total;
 
-    @Column(nullable = false)
     @EqualsAndHashCode.Include
-    private String state; // 'Mayoreo' or 'Menudeo'
-
     private Long itemCount;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,5 +43,6 @@ public class Sale {
     @EqualsAndHashCode.Exclude
     private Set<SaleItem> items;
 
+    @EqualsAndHashCode.Include
     private boolean isCreditSale; // Indicates if the sale is a credit sale
 }

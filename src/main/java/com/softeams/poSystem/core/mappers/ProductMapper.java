@@ -9,6 +9,7 @@ import com.softeams.poSystem.core.services.interfaces.IDepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -20,33 +21,60 @@ public class ProductMapper implements IProductMapper {
             return null;
         }
         return new ProductResponse(
+                product.getId(),
                 product.getSKU(),
                 product.getNombre(),
                 product.getDepartment().getName(),
                 product.getPrecioCosto(),
                 product.getPrecioVenta(),
                 product.getPrecioMayoreo(),
-                product.getStock(),
                 product.getPrecioPiezaVenta(),
                 product.getPrecioPiezaMayoreo(),
+                product.getUnidadesPorPresentacion(),
+                product.getStock(),
+                product.getStockPorUnidades(),
                 product.getStockMinimo(),
-                product.getMinimoMayoreo()
+                product.getMinimoMayoreo(),
+                product.getImagePath()
         );
     }
+
+    public List<ProductResponse> toDto(List<Product> products) {
+        if (products == null) {
+            return null;
+        }
+        return products.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     public Product toEntity(ProductRequest product) {
         if (product == null) {
             return null;
         }
         Department department = departmentService.getDepartmentByName(product.getDepartamento());
+        BigDecimal precioPiezaMayoreo = product.getPrecioMayoreo()
+                .divide(
+                        new BigDecimal(product.getUnidadesPorPresentacion()),
+                        2, // scale: number of decimal places
+                        BigDecimal.ROUND_HALF_UP // rounding mode
+                );
+        BigDecimal stockPorUnidades = product.getStock()
+            .multiply(BigDecimal.valueOf(product.getUnidadesPorPresentacion()));
+
         return Product.builder()
                 .SKU(product.getSku())
                 .nombre(product.getNombre())
                 .precioCosto(product.getPrecioCosto())
                 .precioVenta(product.getPrecioVenta())
                 .precioMayoreo(product.getPrecioMayoreo())
+                .precioPiezaVenta(product.getPrecioUnidadVenta())
+                .precioPiezaMayoreo(precioPiezaMayoreo)
                 .stock(product.getStock())
                 .stockMinimo(product.getStockMinimo())
+                .stockPorUnidades(stockPorUnidades.intValue())
                 .minimoMayoreo(product.getMinimoMayoreo())
+                .unidadesPorPresentacion(product.getUnidadesPorPresentacion())
                 .department(department)
                 .isActive(true)
                 .build();
