@@ -23,6 +23,7 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
     )
     FROM InventoryEntry e
     WHERE e.producto.id = :productId
+    AND e.producto.isActive = true
     """)
     BigDecimal calcularValorInventarioDisponiblePorProducto(@Param("productId") Long productId);
 
@@ -33,6 +34,7 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
         ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) / e.producto.unidadesPorPresentacion)
     )
     FROM InventoryEntry e
+    WHERE e.producto.isActive = true
     """)
     BigDecimal calcularValorInventarioDisponible();
 

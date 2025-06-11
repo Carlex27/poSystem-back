@@ -2,6 +2,7 @@ package com.softeams.poSystem.core.controllers;
 
 import com.softeams.poSystem.core.dtos.client.ClientDto;
 import com.softeams.poSystem.core.mappers.ClientMapper;
+import com.softeams.poSystem.core.services.AbonoService;
 import com.softeams.poSystem.core.services.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
     private final ClientMapper clientMapper;
+    private final AbonoService abonoService;
     //CRUD
     //CREATE
 
@@ -94,5 +96,13 @@ public class ClientController {
             ) {
         log.info("[ClientController | Abonar] Abonando client by id: {} with amount: {}", id, abono);
         return ResponseEntity.ok(clientService.abonar(id, abono));
+    }
+
+    @GetMapping("/abonos/client")
+    public ResponseEntity<?> abonos(
+            @RequestParam Long id
+    ){
+        log.info("");
+        return ResponseEntity.ok(abonoService.getAllAbonosByClient(id));
     }
 }

@@ -4,12 +4,13 @@ import com.softeams.poSystem.core.entities.Abono;
 import com.softeams.poSystem.core.entities.Client;
 import com.softeams.poSystem.core.repositories.AbonoRepository;
 import com.softeams.poSystem.core.services.interfaces.IAbonoService;
-import com.softeams.poSystem.core.services.interfaces.IClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AbonoService implements IAbonoService {
     private final AbonoRepository abonoRepository;
-    private final IClientService clientService;
     //CRUD
     //CREATE
     public Abono createAbono(Abono abono) {
@@ -33,8 +33,9 @@ public class AbonoService implements IAbonoService {
     //READ
     public List<Abono> getAllAbonosByClient(Long clientId) {
         log.info("Fetching all abonos for client with id: {}", clientId);
-        return abonoRepository.findAllByIsActiveTrueAndClient(clientService.getClientById(clientId));
+        return abonoRepository.findAllByIsActiveTrueAndClient(clientId);
     }
+
 
     //UPDATE NOT REQUIRED
     //DELETE
@@ -48,12 +49,14 @@ public class AbonoService implements IAbonoService {
 
     //LOGIC
     @Transactional
-    public Abono createAbonoForClient(Long clientId, Abono abono) {
-        log.info("Creating abono for client with id: {}", clientId);
-        Client client = clientService.getClientById(clientId);
-        abono.setClient(client);
-        client.setBalance(client.getBalance().subtract(abono.getMontoAbono()));
-        clientService.updateClient(clientId, client);
+    public Abono createAbonoForClient(Client client, BigDecimal abonoAmount) {
+        log.info("Creating abono for client with id: {}", client.getName());
+        Abono abono = Abono.builder()
+                .client(client)
+                .fechaAbono(LocalDateTime.now())
+                .montoAbono(abonoAmount)
+                .isActive(true)
+                .build();
         return createAbono(abono);
     }
 
