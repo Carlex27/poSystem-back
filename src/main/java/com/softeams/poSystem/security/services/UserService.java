@@ -41,7 +41,7 @@ public class UserService {
 
     public List<User> findAll(){
         log.info("Finding all users");
-        return userRepository.findAll();
+        return userRepository.findAllByIsActiveTrue();
     }
 
     public List<User> findByRoles(String roles){
@@ -50,7 +50,7 @@ public class UserService {
 
     public List<User> search(String query){
         log.info("Searching for users with query: {}", query);
-        return userRepository.findByUsernameContainingIgnoreCase(query);
+        return userRepository.findByIsActiveTrueAndUsernameContainingIgnoreCase(query);
     }
 
     //UPDATE
@@ -64,10 +64,6 @@ public class UserService {
     }
 
     //DELETE
-    public void deleteUser(String username){
-        log.info("Deleting user with username: {}", username);
-        userRepository.deleteByUsername(username);
-    }
 
     public ResponseEntity<?> deleteUserById(Long id){
         log.info("Deleting user with id: {}", id);
@@ -75,7 +71,11 @@ public class UserService {
             log.error("Cannot delete default user");
             return ResponseEntity.badRequest().body("Cannot delete default user");
         }
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        user.setActive(false);
+        userRepository.save(user);
         return ResponseEntity.ok().build();
     }
 }
