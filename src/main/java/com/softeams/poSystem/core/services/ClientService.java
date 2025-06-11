@@ -47,6 +47,11 @@ public class ClientService implements IClientService {
         return clientRepository.findByNameContainingIgnoreCase(nameTerm);
     }
 
+    public BigDecimal getSumBalancesClients(){
+        log.info("");
+        return clientRepository.calcularBalanceTotalClientesActivos();
+    }
+
 
     //UPDATE
     @Transactional
