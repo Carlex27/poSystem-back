@@ -20,8 +20,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Product findBySKU(String sku);
     Long countByIsActiveTrue();
     Long countByStockLessThanAndIsActiveTrue(int threshold);
-    @Query("SELECT SUM(p.stock) FROM Product p")
+    @Query("SELECT SUM(p.stock) FROM Product p" +
+            " WHERE p.isActive = true")
     BigDecimal calcularStockTotal();
-    @Query("SELECT SUM(p.stockPorUnidades) FROM Product p")
+    @Query("SELECT SUM(p.stockPorUnidades) FROM Product p" +
+            " WHERE p.isActive = true")
     Integer calcularStockTotalUnidades();
 }

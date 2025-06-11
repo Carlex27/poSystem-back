@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -37,6 +39,8 @@ public class Client {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Set<Abono> abono;
+
+    private LocalDateTime lastAbonoDate;
 
     private boolean isActive;
 }

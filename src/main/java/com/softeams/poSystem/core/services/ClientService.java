@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.entities.Abono;
 import com.softeams.poSystem.core.entities.Client;
 import com.softeams.poSystem.core.repositories.ClientRepository;
 import com.softeams.poSystem.core.services.interfaces.IClientService;
@@ -16,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class ClientService implements IClientService {
     private final ClientRepository clientRepository;
-
+    private final AbonoService abonoService;
     //CRUD
     //CREATE
     public Client createClient(Client client) {
@@ -83,8 +84,11 @@ public class ClientService implements IClientService {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
 
+        Abono abonoEntity = abonoService.createAbonoForClient(client,abono);
+
         BigDecimal nuevoSaldo = client.getBalance().subtract(abono);
         client.setBalance(nuevoSaldo);
+        client.setLastAbonoDate(abonoEntity.getFechaAbono());
         clientRepository.save(client);
 
         return "Abono realizado correctamente. Nuevo saldo: " + nuevoSaldo;
