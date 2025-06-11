@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface AbonoRepository extends JpaRepository<Abono, Long> {
-    List<Abono> findAllByIsActiveTrueAndClient(Long clientid);
+    List<Abono> findAllByIsActiveTrueAndClientId(Long clientId);
     @Query("""
     SELECT SUM(a.montoAbono)
     FROM Abono a

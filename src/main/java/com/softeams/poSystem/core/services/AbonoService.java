@@ -33,7 +33,7 @@ public class AbonoService implements IAbonoService {
     //READ
     public List<Abono> getAllAbonosByClient(Long clientId) {
         log.info("Fetching all abonos for client with id: {}", clientId);
-        return abonoRepository.findAllByIsActiveTrueAndClient(clientId);
+        return abonoRepository.findAllByIsActiveTrueAndClientId(clientId);
     }
 
 
