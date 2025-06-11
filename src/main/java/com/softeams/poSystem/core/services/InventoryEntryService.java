@@ -64,5 +64,6 @@ public class InventoryEntryService {
 
         entry.setCajasCompradas(entryNew.getCajasCompradas());
         entry.setPrecioPorCaja(entryNew.getPrecioPorCaja());
+        inventoryEntryRepository.save(entry);
     }
 }
