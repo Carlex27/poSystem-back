@@ -98,7 +98,20 @@ public class SaleController {
         return ResponseEntity.ok(saleMapper.toResponse(saleService.getSalesByDate(startDateTime, endDateTime)));
     }
 
+    @GetMapping("/by-month/client")
+    public ResponseEntity<?> getSalesByMonthAndClient(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month,
+            @RequestParam("clientId") Long clientId
+    ) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        return ResponseEntity.ok(saleMapper.toResponse(saleService.getSalesByDateAndClient(startDateTime, endDateTime, clientId)));
+    }
 
 
 

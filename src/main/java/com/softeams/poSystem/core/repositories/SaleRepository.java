@@ -18,6 +18,9 @@ public interface SaleRepository extends JpaRepository<Sale,Long> {
     Optional<Sale> findById(Long id);
     List<Sale> findBySaleDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
+    List<Sale> findByClientIdAndSaleDateBetween(Long clientId, LocalDateTime startDate, LocalDateTime endDate);
+
+
     @Query("SELECT SUM(s.total) FROM Sale s WHERE s.saleDate >= :start AND s.saleDate < :end")
     BigDecimal getTotalVentas(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
