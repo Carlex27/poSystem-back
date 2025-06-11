@@ -187,4 +187,19 @@ public class ProductController {
         return ResponseEntity.ok(productService.altaProducts(altas));
     }
 
+
+    //Costo Inventario
+    @GetMapping("/costo/producto")
+    public ResponseEntity<?> costoInventarioPorProducto(
+            @RequestParam Long id
+    ){
+        log.info("");
+        return ResponseEntity.ok(productService.calcularCostoInventarioPorProducto(id));
+    }
+    @GetMapping("/costo/total")
+    public ResponseEntity<?> costoInventarioTotal(
+    ){
+        log.info("");
+        return ResponseEntity.ok(productService.calculatCostoInventarioTotal());
+    }
 }

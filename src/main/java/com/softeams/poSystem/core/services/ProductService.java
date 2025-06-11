@@ -79,6 +79,15 @@ public class ProductService implements IProductService {
         return productRepository.countByStockLessThanAndIsActiveTrue(threshold);
     }
 
+    public BigDecimal calcularCostoInventarioPorProducto(Long id){
+        log.info("");
+        return inventoryEntryService.calcularValorInventarioDisponiblePorProducto(id);
+    }
+
+    public BigDecimal calculatCostoInventarioTotal(){
+        return inventoryEntryService.calcularValorInventarioDisponible();
+    }
+
     //UPDATE
     @Transactional
     public ProductResponse updateProduct(Product dto, Long id) {
