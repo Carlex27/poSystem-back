@@ -129,6 +129,7 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         product.setIsActive(false);
+        product.setSKU(product.getSKU()+"-DELETED");
         productRepository.save(product);
     }
 

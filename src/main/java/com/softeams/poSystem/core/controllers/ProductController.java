@@ -78,7 +78,11 @@ public class ProductController {
     ) {
         log.info("[ProductController | CreateProducts] Creating product");
         List<Product> products = productMapper.toEntity(productsRequest);
-        return ResponseEntity.ok(productMapper.toDto(productService.createProducts(products)));
+        for(Product product: products){
+            productService.createProduct(product);
+            productService.createInventoryEntry(product);
+        }
+        return ResponseEntity.ok("Productos creados exitosamente");
     }
 
 
