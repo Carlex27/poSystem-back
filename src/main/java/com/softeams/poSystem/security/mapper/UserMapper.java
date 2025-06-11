@@ -24,6 +24,7 @@ public class UserMapper implements IUserMapper {
         userEntity.setPassword(passwordEncoder.encode(userRegistrationDto.userPassword()));
         userEntity.setRoles(userRegistrationDto.userRole());
         userEntity.setCreatedAt(LocalDateTime.now());
+        userEntity.setActive(true);
         return userEntity;
     }
 
