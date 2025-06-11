@@ -50,8 +50,8 @@ public class ClientMapper {
         return new ClientDto(
                 client.getId(),
                 client.getName(),
-                client.getPhone(),
                 client.getDirection(),
+                client.getPhone(),
                 client.getBalance(),
                 client.getCreditLimit()
         );

@@ -57,7 +57,7 @@ public class ClientController {
         return ResponseEntity.ok(clientMapper.toDto(clientService.getClientById(id)));
     }
     @GetMapping("/search")
-    public ResponseEntity<?> getClientsByNameOrEmail(
+    public ResponseEntity<?> getClientsByName(
             @RequestParam("query") String query
     ) {
         log.info("[ClientController | GetClientsByNameOrEmail] Fetching clients by name or email: {}", query);

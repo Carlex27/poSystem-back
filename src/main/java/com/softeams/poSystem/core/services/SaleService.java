@@ -62,6 +62,11 @@ public class SaleService implements ISaleService {
         return saleRepository.findBySaleDateBetween(startDate, endDate);
     }
 
+    public List<Sale> getSalesByDateAndClient(LocalDateTime startDate, LocalDateTime endDate, Long clientId) {
+        log.info("Fetching sales by date: {}", startDate);
+        return saleRepository.findByClientIdAndSaleDateBetween(clientId,startDate, endDate);
+    }
+
     public BigDecimal getTotalVentas(LocalDateTime start, LocalDateTime end) {
         log.info("Calculating total sales from {} to {}", start, end);
         return saleRepository.getTotalVentas(start, end);
