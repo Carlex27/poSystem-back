@@ -34,7 +34,7 @@ public class TicketSettingsController {
         return ResponseEntity.ok(ticketSettingsMapper.toDto(ticketService.getTicketSettings()));
     }
     //UPDATE
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     public ResponseEntity<?> updateTicketSettings(
             @Valid
             @RequestBody
