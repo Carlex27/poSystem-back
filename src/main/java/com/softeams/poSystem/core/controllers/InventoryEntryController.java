@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.controllers;
 
+import com.softeams.poSystem.core.dtos.inventoryEntry.InventorEntryDto;
 import com.softeams.poSystem.core.entities.InventoryEntry;
 import com.softeams.poSystem.core.services.InventoryEntryService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,16 @@ public class InventoryEntryController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateEntry(
             @PathVariable Long id,
-            @RequestBody InventoryEntry entry
+            @RequestBody InventorEntryDto entry
     ){
         log.info("SI SE ACTUALIZO");
-        inventoryEntryService.update(id,entry);
+
+        inventoryEntryService.update(id,
+                InventoryEntry.builder()
+                        .id(entry.id())
+                        .cajasCompradas(entry.cajasCompradas())
+                        .precioPorCaja(entry.precioPorCaja())
+                        .build());
 
         log.info("SI SE ACTUALIZO");
         return ResponseEntity.ok("Entrada actualizada exitosamente");

@@ -15,7 +15,7 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
     List<InventoryEntry> findByProducto(Product product);
 
     List<InventoryEntry> findByProductoOrderByEntryDateAsc(Product product);
-    List<InventoryEntry> findByProductoIdOrderByEntryDateAsc(Long id);
+    List<InventoryEntry> findByProductoIdOrderByEntryDateDesc(Long id);
 
     @Query("""
     SELECT SUM(

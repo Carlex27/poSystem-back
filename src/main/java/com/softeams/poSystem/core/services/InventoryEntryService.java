@@ -41,7 +41,7 @@ public class InventoryEntryService {
     }
     public List<InventoryEntry> getEntriesByProductIdAndEntryDateAsc(Long id) {
         log.info("Obteniendo entradas de inventario para el producto: {}", id);
-        return inventoryEntryRepository.findByProductoIdOrderByEntryDateAsc(id);
+        return inventoryEntryRepository.findByProductoIdOrderByEntryDateDesc(id);
     }
 
 
