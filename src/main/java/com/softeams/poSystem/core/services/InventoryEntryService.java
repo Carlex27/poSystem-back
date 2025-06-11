@@ -57,4 +57,12 @@ public class InventoryEntryService {
     public BigDecimal calcularValorInventarioDisponible(){
         return inventoryEntryRepository.calcularValorInventarioDisponible();
     }
+
+    public void update(Long id, InventoryEntry entryNew){
+        InventoryEntry entry = inventoryEntryRepository.findById(id)
+                .orElseThrow();
+
+        entry.setCajasCompradas(entryNew.getCajasCompradas());
+        entry.setPrecioPorCaja(entryNew.getPrecioPorCaja());
+    }
 }
