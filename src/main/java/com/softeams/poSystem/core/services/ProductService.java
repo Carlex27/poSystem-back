@@ -58,7 +58,7 @@ public class ProductService implements IProductService {
 
     public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCaseAndIsActiveTrue(query, query)
+        return productRepository.buscarActivosPorNombreOSku(query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();

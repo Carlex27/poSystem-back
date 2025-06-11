@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findAllByIsActiveTrue();
-    List<Client> findByNameContainingIgnoreCase(String nameTerm);
+    List<Client> findByIsActiveTrueAndNameContainingIgnoreCase(String nameTerm);
     @Query("SELECT SUM(c.balance) FROM Client c WHERE c.isActive = true")
     BigDecimal calcularBalanceTotalClientesActivos();
 

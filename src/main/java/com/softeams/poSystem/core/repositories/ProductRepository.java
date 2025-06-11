@@ -4,6 +4,7 @@ import com.softeams.poSystem.core.entities.Product;
 import com.softeams.poSystem.core.entities.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -14,7 +15,16 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
     Optional<Product> findByNombre(String nombre);
-    List<Product> findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCaseAndIsActiveTrue(String nombreTerm, String SkuTerm);
+
+
+    @Query("""
+SELECT p FROM Product p
+WHERE p.isActive = true
+AND (LOWER(p.nombre) LIKE LOWER(CONCAT('%', :term, '%'))
+     OR LOWER(p.SKU) LIKE LOWER(CONCAT('%', :term, '%')))
+""")
+    List<Product> buscarActivosPorNombreOSku(@Param("term") String term);
+
     List<Product> findByIsActiveTrue();
     Optional<Product> findById(Long id);
     Product findBySKU(String sku);

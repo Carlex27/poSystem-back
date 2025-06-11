@@ -49,7 +49,7 @@ public class DepartmentService implements IDepartmentService {
 
     public List<Department> search(String nameTerm) {
         log.info("Fetching departments by name term: {}", nameTerm);
-        return departmentRepository.findByNameContainingIgnoreCase(nameTerm);
+        return departmentRepository.findByIsActiveTrueAndNameContainingIgnoreCase(nameTerm);
     }
 
     //UPDATE

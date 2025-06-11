@@ -44,7 +44,7 @@ public class ClientService implements IClientService {
     }
     public List<Client> getClientsByName(String nameTerm) {
         log.info("Fetching clients by name: {}", nameTerm);
-        return clientRepository.findByNameContainingIgnoreCase(nameTerm);
+        return clientRepository.findByIsActiveTrueAndNameContainingIgnoreCase(nameTerm);
     }
 
     public BigDecimal getSumBalancesClients(){
