@@ -53,7 +53,8 @@ public class ClientMapper {
                 client.getDirection(),
                 client.getPhone(),
                 client.getBalance(),
-                client.getCreditLimit()
+                client.getCreditLimit(),
+                client.getLastAbonoDate()
         );
     }
     public List<ClientDto> toDto(List<Client> clients) {

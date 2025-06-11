@@ -1,6 +1,7 @@
 package com.softeams.poSystem.core.dtos.client;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record ClientDto(
         Long id,
@@ -8,6 +9,7 @@ public record ClientDto(
         String direction,
         String phoneNumber,
         BigDecimal balance,
-        BigDecimal creditLimit
+        BigDecimal creditLimit,
+        LocalDateTime lastAbonoDate
 ) {
 }
