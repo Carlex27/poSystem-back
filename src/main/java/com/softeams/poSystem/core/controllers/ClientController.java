@@ -105,4 +105,18 @@ public class ClientController {
         log.info("");
         return ResponseEntity.ok(abonoService.getAllAbonosByClient(id));
     }
+
+    @GetMapping("/balance/total")
+    public ResponseEntity<?> balancesTotal(){
+        return ResponseEntity.ok(clientService.getSumBalancesClients());
+    }
+
+    @DeleteMapping("/abono/delete/{id}")
+    public ResponseEntity<?> deleteAbono(
+            @PathVariable Long id
+    ){
+        log.info("[ClientController | DeleteAbono] Deleting abono by id: {}", id);
+        abonoService.deleteAbono(id);
+        return ResponseEntity.ok("Abono eliminado correctamnte");
+    }
 }
