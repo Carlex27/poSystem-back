@@ -33,7 +33,7 @@ public class DepartmentService implements IDepartmentService {
 
     public List<Department> getAllDepartments() {
         log.info("Fetching all departments");
-        return departmentRepository.findByIsActiveTrue();
+        return departmentRepository.findAll();
     }
 
     public Department getDepartmentById(Long id) {
@@ -49,7 +49,7 @@ public class DepartmentService implements IDepartmentService {
 
     public List<Department> search(String nameTerm) {
         log.info("Fetching departments by name term: {}", nameTerm);
-        return departmentRepository.findByNameContainingIgnoreCase(nameTerm);
+        return departmentRepository.findByIsActiveTrueAndNameContainingIgnoreCase(nameTerm);
     }
 
     //UPDATE

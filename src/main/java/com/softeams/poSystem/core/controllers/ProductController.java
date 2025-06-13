@@ -78,7 +78,11 @@ public class ProductController {
     ) {
         log.info("[ProductController | CreateProducts] Creating product");
         List<Product> products = productMapper.toEntity(productsRequest);
-        return ResponseEntity.ok(productMapper.toDto(productService.createProducts(products)));
+        for(Product product: products){
+            productService.createProduct(product);
+            productService.createInventoryEntry(product);
+        }
+        return ResponseEntity.ok("Productos creados exitosamente");
     }
 
 
@@ -187,4 +191,19 @@ public class ProductController {
         return ResponseEntity.ok(productService.altaProducts(altas));
     }
 
+
+    //Costo Inventario
+    @GetMapping("/costo/producto")
+    public ResponseEntity<?> costoInventarioPorProducto(
+            @RequestParam Long id
+    ){
+        log.info("");
+        return ResponseEntity.ok(productService.calcularCostoInventarioPorProducto(id));
+    }
+    @GetMapping("/costo/total")
+    public ResponseEntity<?> costoInventarioTotal(
+    ){
+        log.info("");
+        return ResponseEntity.ok(productService.calculatCostoInventarioTotal());
+    }
 }

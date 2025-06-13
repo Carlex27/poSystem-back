@@ -14,17 +14,17 @@ import java.util.List;
 @Repository
 public interface AbonoRepository extends JpaRepository<Abono, Long> {
     List<Abono> findAllByIsActiveTrueAndClientId(Long clientId);
-    @Query("""
-    SELECT SUM(a.montoAbono)
-    FROM Abono a
-    WHERE a.isActive = true
-      AND a.fechaAbono BETWEEN :inicio AND :fin
-    """)
-    BigDecimal calcularTotalAbonosEntreFechas(
-            @Param("inicio") LocalDateTime inicio,
-            @Param("fin") LocalDateTime fin
-    );
 
+    @Query(value = """
+        SELECT COALESCE(SUM(monto_abono), 0)
+        FROM abono
+        WHERE fecha_abono BETWEEN :startDate AND :endDate
+        AND is_active = true
+    """, nativeQuery = true)
+    BigDecimal getTotalAbonosInRangeAndIsActive(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 
 
 }

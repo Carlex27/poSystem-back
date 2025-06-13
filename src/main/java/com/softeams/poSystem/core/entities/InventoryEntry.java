@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class InventoryEntry {
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
+    @JsonIgnore
     private Product producto;
 
     @Column(nullable = false)
@@ -32,6 +34,7 @@ public class InventoryEntry {
     private BigDecimal precioPorCaja;
 
     @Column(nullable = false)
+    @JsonIgnore
     private Integer unidadesVendidas;
 
     public BigDecimal getTotalCompra() {

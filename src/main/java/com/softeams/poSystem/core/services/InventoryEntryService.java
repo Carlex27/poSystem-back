@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,9 +39,31 @@ public class InventoryEntryService {
         log.info("Obteniendo entradas de inventario para el producto: {}", product.getNombre());
         return inventoryEntryRepository.findByProductoOrderByEntryDateAsc(product);
     }
+    public List<InventoryEntry> getEntriesByProductIdAndEntryDateAsc(Long id) {
+        log.info("Obteniendo entradas de inventario para el producto: {}", id);
+        return inventoryEntryRepository.findByProductoIdOrderByEntryDateDesc(id);
+    }
+
 
     public void save(InventoryEntry inventoryEntry) {
         log.info("Guardando entrada de inventario: {}", inventoryEntry);
         inventoryEntryRepository.save(inventoryEntry);
+    }
+
+    public BigDecimal calcularValorInventarioDisponiblePorProducto(Long productId){
+        return inventoryEntryRepository.calcularValorInventarioDisponiblePorProducto(productId);
+    }
+
+    public BigDecimal calcularValorInventarioDisponible(){
+        return inventoryEntryRepository.calcularValorInventarioDisponible();
+    }
+
+    public void update(Long id, InventoryEntry entryNew){
+        InventoryEntry entry = inventoryEntryRepository.findById(id)
+                .orElseThrow();
+
+        entry.setCajasCompradas(entryNew.getCajasCompradas());
+        entry.setPrecioPorCaja(entryNew.getPrecioPorCaja());
+        inventoryEntryRepository.save(entry);
     }
 }

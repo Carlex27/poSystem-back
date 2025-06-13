@@ -58,7 +58,7 @@ public class ProductService implements IProductService {
 
     public List<Product> getProductsByMarcaOrNombreOrSKU(String query) {
         log.info("Fetching products by brand or name: {}", query);
-        return productRepository.findByNombreContainingIgnoreCaseOrSKUContainingIgnoreCase(query, query)
+        return productRepository.buscarActivosPorNombreOSku(query)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
@@ -77,6 +77,15 @@ public class ProductService implements IProductService {
     public Long getLowStockCount(int threshold) {
         log.info("Fetching low stock count for threshold: {}", threshold);
         return productRepository.countByStockLessThanAndIsActiveTrue(threshold);
+    }
+
+    public BigDecimal calcularCostoInventarioPorProducto(Long id){
+        log.info("");
+        return inventoryEntryService.calcularValorInventarioDisponiblePorProducto(id);
+    }
+
+    public BigDecimal calculatCostoInventarioTotal(){
+        return inventoryEntryService.calcularValorInventarioDisponible();
     }
 
     //UPDATE
@@ -120,6 +129,7 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         product.setIsActive(false);
+        product.setSKU(product.getSKU()+"-DELETED");
         productRepository.save(product);
     }
 

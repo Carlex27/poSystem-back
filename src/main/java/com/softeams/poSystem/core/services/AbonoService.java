@@ -36,6 +36,9 @@ public class AbonoService implements IAbonoService {
         return abonoRepository.findAllByIsActiveTrueAndClientId(clientId);
     }
 
+    public BigDecimal getTotalAbonosInRange(LocalDateTime start, LocalDateTime finish){
+        return abonoRepository.getTotalAbonosInRangeAndIsActive(start,finish);
+    }
 
     //UPDATE NOT REQUIRED
     //DELETE

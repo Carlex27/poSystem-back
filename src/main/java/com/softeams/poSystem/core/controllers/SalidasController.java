@@ -7,9 +7,13 @@ import com.softeams.poSystem.core.services.SalidasService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -42,6 +46,36 @@ public class SalidasController {
     }
 
     //READ
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findAllSalidas() {
+        log.info("Finding all salidas");
+        List<Salidas> salidas = salidasService.getAllSalidas();
+        return ResponseEntity.ok(salidasMapper.toDto(salidas));
+    }
+    @GetMapping("/by-date")
+    public ResponseEntity<?> getSalesByDate(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ){
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return ResponseEntity.ok(salidasMapper.toDto(salidasService.getSalidasByDate(startOfDay, endOfDay)));
+    }
+
+    @GetMapping("/by-month")
+    public ResponseEntity<?> getSalesByMonth(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        return ResponseEntity.ok(salidasMapper.toDto(salidasService.getSalidasByDate(startDateTime, endDateTime)));
+    }
+
 
 
     //UPDATE

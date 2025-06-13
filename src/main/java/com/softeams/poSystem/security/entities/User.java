@@ -43,4 +43,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<RefreshTokenEntity> refreshTokens;
+
+    private boolean isActive;
 }

@@ -1,6 +1,7 @@
 package com.softeams.poSystem.core.controllers;
 
 import com.softeams.poSystem.core.mappers.interfaces.ISaleMapper;
+import com.softeams.poSystem.core.services.CorteService;
 import com.softeams.poSystem.core.services.interfaces.IProductService;
 import com.softeams.poSystem.core.services.interfaces.ISaleService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class ResumeController {
     private final ISaleMapper saleMapper;
     private final IProductService productService;
     private final ISaleService saleService;
-    private final int LOW_STOCK_THRESHOLD = 20;
+    private final int LOW_STOCK_THRESHOLD = 2;
+    private final CorteService corteService;
 
     @GetMapping("/ResumeVentas")
     public ResponseEntity<?> getResumeVentas(
@@ -35,6 +37,16 @@ public class ResumeController {
                 saleService.countSalesInRange(startOfDay, endOfDay),
                 saleService.getTotalVentas(startOfDay, endOfDay)
         ));
+    }
+
+    @GetMapping("/corte/day")
+    public ResponseEntity<?> getCorteByDay(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ){
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return ResponseEntity.ok(corteService.crearCorte(startOfDay, endOfDay));
     }
 
     @GetMapping("/ResumeVentasByMonth")

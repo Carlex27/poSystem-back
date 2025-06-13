@@ -12,4 +12,6 @@ public interface ISaleService {
     long countSalesInRange(LocalDateTime start, LocalDateTime end);
     BigDecimal getTotalVentas(LocalDateTime start, LocalDateTime end);
     Sale getSaleById(Long id);
+    BigDecimal getTotalVentasByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+
 }
