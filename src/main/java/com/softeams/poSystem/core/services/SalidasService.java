@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +33,15 @@ public class SalidasService {
         log.info("Fetching salida by id: {}", id);
         return salidasRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Salida not found with id: " + id));
+    }
+
+    public List<Salidas> getAllSalidas(){
+        log.info("Fetching all salidas");
+        return salidasRepository.findAll();
+    }
+
+    public List<Salidas> getSalidasByDate(LocalDateTime start, LocalDateTime finish){
+        return salidasRepository.findByDateBetween(start,finish);
     }
     //UPDATE
     @Transactional
