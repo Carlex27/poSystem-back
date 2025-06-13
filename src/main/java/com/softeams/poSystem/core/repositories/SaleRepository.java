@@ -34,4 +34,16 @@ public interface SaleRepository extends JpaRepository<Sale,Long> {
             Pageable pageable
     );
 
+    @Query(value = """
+    SELECT COALESCE(SUM(total), 0)
+    FROM sale
+    WHERE sale_date BETWEEN :startDate AND :endDate
+    AND is_credit_sale = false
+""", nativeQuery = true)
+    BigDecimal getTotalSalesInRangeAndIsNotCredit(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+
 }

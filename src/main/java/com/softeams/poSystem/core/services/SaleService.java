@@ -83,6 +83,11 @@ public class SaleService implements ISaleService {
         return saleRepository.findTop3BySaleDateRange(startDate, endDate, topThree);
     }
 
+    public BigDecimal getTotalVentasByDateRange(LocalDateTime startDate, LocalDateTime endDate){
+        log.info("");
+        return saleRepository.getTotalSalesInRangeAndIsNotCredit(startDate,endDate);
+    }
+
     //UPDATE AND DELETE
 
     //Por logica de negocio, no se permite actualizar una venta una vez creada.

@@ -2,19 +2,21 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.entities.Salidas;
 import com.softeams.poSystem.core.repositories.SalidasRepository;
+import com.softeams.poSystem.core.services.interfaces.ISalidaService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SalidasService {
+public class SalidasService implements ISalidaService {
     private final SalidasRepository salidasRepository;
 
     //CRUD operations for Salidas can be implemented here
@@ -43,6 +45,11 @@ public class SalidasService {
     public List<Salidas> getSalidasByDate(LocalDateTime start, LocalDateTime finish){
         return salidasRepository.findByDateBetween(start,finish);
     }
+
+    public BigDecimal getTotalSalidasInRange(LocalDateTime start, LocalDateTime finish){
+        log.info("");
+        return salidasRepository.getTotalSalidasInRange(start,finish);
+    }
     //UPDATE
     @Transactional
     public Salidas updateSalida(Long id, Salidas salida) {
@@ -50,7 +57,7 @@ public class SalidasService {
         Salidas existingSalida = getSalidaById(id);
         existingSalida.setDescription(salida.getDescription());
         existingSalida.setAmount(salida.getAmount());
-        existingSalida.setDate(salida.getDate());
+
         return salidasRepository.save(existingSalida);
     }
     //DELETE

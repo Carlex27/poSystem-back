@@ -27,5 +27,13 @@ public interface SalidasRepository extends JpaRepository<Salidas,Long> {
     List<Salidas> findByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
 
-
+    @Query(value = """
+        SELECT COALESCE(SUM(amount), 0)
+        FROM salidas
+        WHERE date BETWEEN :startDate AND :endDate
+    """, nativeQuery = true)
+    BigDecimal getTotalSalidasInRange(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

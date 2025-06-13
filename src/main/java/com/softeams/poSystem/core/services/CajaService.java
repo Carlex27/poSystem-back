@@ -2,6 +2,7 @@ package com.softeams.poSystem.core.services;
 
 import com.softeams.poSystem.core.entities.Caja;
 import com.softeams.poSystem.core.repositories.CajaRepository;
+import com.softeams.poSystem.core.services.interfaces.ICajaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CajaService {
+public class CajaService implements ICajaService {
     private final CajaRepository cajaRepository;
 
     //CRUD

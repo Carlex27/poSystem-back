@@ -33,7 +33,7 @@ public class DepartmentService implements IDepartmentService {
 
     public List<Department> getAllDepartments() {
         log.info("Fetching all departments");
-        return departmentRepository.findByIsActiveTrue();
+        return departmentRepository.findAll();
     }
 
     public Department getDepartmentById(Long id) {
