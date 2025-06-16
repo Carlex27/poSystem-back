@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.services;
 
+import com.softeams.poSystem.core.dtos.abono.AbonoResumenDto;
 import com.softeams.poSystem.core.entities.Abono;
 import com.softeams.poSystem.core.entities.Client;
 import com.softeams.poSystem.core.repositories.AbonoRepository;
@@ -38,6 +39,10 @@ public class AbonoService implements IAbonoService {
 
     public BigDecimal getTotalAbonosInRange(LocalDateTime start, LocalDateTime finish){
         return abonoRepository.getTotalAbonosInRangeAndIsActive(start,finish);
+    }
+
+    public List<AbonoResumenDto> getResumenAbonos(LocalDateTime start, LocalDateTime finish){
+        return abonoRepository.findAbonosResumenByFechaAbonoBetween(start,finish);
     }
 
     //UPDATE NOT REQUIRED
