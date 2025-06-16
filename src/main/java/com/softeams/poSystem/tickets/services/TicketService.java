@@ -69,7 +69,8 @@ public class TicketService implements ITicketService {
     public File generarTicketCorte(CorteDto corteDto, LocalDateTime start, LocalDateTime finish) throws Exception{
         TicketSettings settings = ticketSettingsRepository.findFirstByOrderByIdAsc()
                 .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
-        log.info(corteDto.toString());
+        log.info("generando ticket corte");
+        log.info("Corte dto" + corteDto.abonos());
         return TicketPDFGenerator.generarTicketCortePDF(settings, corteDto, start,
                 saleService.countSalesInRange(start,finish));
     }

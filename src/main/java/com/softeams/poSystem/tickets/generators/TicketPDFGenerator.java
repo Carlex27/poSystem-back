@@ -177,23 +177,32 @@ public class TicketPDFGenerator {
         doc.add(new Paragraph("=============================", normal));
 
         doc.add(new Paragraph("== GANANCIA DEL DIA ==", bold));
-        doc.add(new Paragraph("GANANCIA: $" + corteDto.gananciaDelDia(), normal));
+        if(corteDto.gananciaDelDia() == null){
+            doc.add(new Paragraph("SIN VENTAS", normal));
+        }else {
+            doc.add(new Paragraph("GANANCIA: $" + corteDto.gananciaDelDia(), normal));
+        }
         doc.add(new Paragraph("=============================", normal));
 
         doc.add(new Paragraph("== PAGOS DE CREDITOS ==", bold));
-        for(AbonoResumenDto abono: corteDto.abonos()){
-            String nombre = abono.getClientName().toUpperCase();
-            BigDecimal montoAbono = abono.getMontoAbono();
-            String linea = String.format("%-18s %s", nombre, montoAbono);
-            doc.add(new Paragraph(linea, normal));
+        if (corteDto.abonos() == null || corteDto.abonos().isEmpty()) { // Verificar si es nulo o vacío
+            doc.add(new Paragraph("NO HUBO PAGOS DE CREDITOS", normal)); // O el mensaje que prefieras
+        } else {
+            for (AbonoResumenDto abono : corteDto.abonos()) {
+                // Es buena práctica verificar si getClientName() puede ser null
+                String nombre = abono.getClientName() != null ? abono.getClientName().toUpperCase() : "N/A";
+                BigDecimal montoAbono = abono.getMontoAbono();
+                // Formatear el BigDecimal a String con dos decimales para consistencia
+                String montoFormateado = String.format("$%.2f", montoAbono);
+                String linea = String.format("%-18s %s", nombre, montoFormateado);
+                doc.add(new Paragraph(linea, normal));
+            }
         }
 
         doc.add(new Paragraph("=============================", normal));
 
         doc.add(new Paragraph("==== VENTAS POR DEPT ====", bold));
-        if(corteDto.abonos() == null){
-            doc.add(new Paragraph("NO HUBO PAGOS", normal));
-        }
+
         for (ResumeDepartamentosDto dep : corteDto.ventasPorDepartamento()) {
             String nombre = dep.getNombreDepartamento().toUpperCase();
             String total = String.format("$%.2f", dep.getTotalVentas());
