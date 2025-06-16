@@ -26,4 +26,5 @@ public class TicketSettings {
     private String rfc;
     private String mensajeFinal;
     private String url;
+    private String impresora;
 }

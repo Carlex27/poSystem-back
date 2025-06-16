@@ -1,9 +1,11 @@
 package com.softeams.poSystem.core.controllers;
 
 import com.softeams.poSystem.core.dtos.sales.SaleRequest;
+import com.softeams.poSystem.core.dtos.sales.SaleResponse;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.mappers.SaleMapper;
 import com.softeams.poSystem.core.services.SaleService;
+import com.softeams.poSystem.tickets.services.ITicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,6 +27,7 @@ import java.time.LocalTime;
 public class SaleController {
     private final SaleService saleService;
     private final SaleMapper saleMapper;
+    private final ITicketService ticketService;
 
     //CRUD
     //CREATE
@@ -32,7 +36,7 @@ public class SaleController {
             @Valid
             @RequestBody SaleRequest saleRequest,
             Authentication authentication
-            ){
+            ) throws Exception{
         log.info("[SaleController | CreateSale] Creating sale by: {}", authentication.getName());
         Sale sale;
         if(!saleRequest.isCreditSale()){
@@ -40,8 +44,10 @@ public class SaleController {
         }else {
             sale = saleMapper.toEntity(saleRequest, authentication, true);
         }
-
-        return ResponseEntity.ok(saleService.creatingSale(sale));
+        SaleResponse saleCreated = saleService.creatingSale(sale);
+        File ticket = ticketService.generarTicketVenta(saleCreated.id());
+        ticketService.ImprimirTicket(ticket);
+        return ResponseEntity.ok(saleCreated);
     }
 
     //READ

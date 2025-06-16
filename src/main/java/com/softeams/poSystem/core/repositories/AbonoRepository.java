@@ -1,5 +1,6 @@
 package com.softeams.poSystem.core.repositories;
 
+import com.softeams.poSystem.core.dtos.abono.AbonoResumenDto;
 import com.softeams.poSystem.core.entities.Abono;
 import com.softeams.poSystem.core.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +27,15 @@ public interface AbonoRepository extends JpaRepository<Abono, Long> {
             @Param("endDate") LocalDateTime endDate
     );
 
+    @Query("""
+    SELECT a.client.name AS clientName, a.montoAbono AS montoAbono
+    FROM Abono a
+    WHERE a.fechaAbono BETWEEN :start AND :end
+      AND a.isActive = true
+""")
+    List<AbonoResumenDto> findAbonosResumenByFechaAbonoBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 
 }

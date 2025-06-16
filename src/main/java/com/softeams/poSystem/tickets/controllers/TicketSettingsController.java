@@ -43,4 +43,11 @@ public class TicketSettingsController {
         log.info("[TicketSettingsController | updateTicketSettings] Updating ticket settings: {}", ticketSettingsDto);
         return ResponseEntity.ok(ticketService.updateTicketSettings(ticketSettingsMapper.toEntity(ticketSettingsDto)));
     }
+
+    @PutMapping("/update/impresora")
+    public ResponseEntity<?> updateImpresora(
+            @RequestParam String impresora
+    ){
+        return ResponseEntity.ok(ticketService.updateImpresora(impresora));
+    }
 }

@@ -86,7 +86,7 @@ public class SaleMapper implements ISaleMapper {
                 sale.getVendedorName(),
                 sale.getSaleDate(),
                 sale.getTotal(),
-                false, // Not a credit sale
+                sale.isCreditSale(), // Not a credit sale
                 toSaleItemsResponse(sale.getItems()),
                 sale.getItemCount()
         );

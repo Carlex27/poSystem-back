@@ -1,5 +1,7 @@
 package com.softeams.poSystem.tickets.services;
 
+import com.softeams.poSystem.core.dtos.cortes.CorteDto;
+import com.softeams.poSystem.core.entities.Client;
 import com.softeams.poSystem.core.entities.Sale;
 import com.softeams.poSystem.core.services.interfaces.ISaleService;
 import com.softeams.poSystem.tickets.entities.TicketItem;
@@ -9,20 +11,23 @@ import com.softeams.poSystem.tickets.generators.TicketPDFGenerator;
 import com.softeams.poSystem.tickets.repositories.TicketSettingsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class TicketService {
+public class TicketService implements ITicketService {
     private final ISaleService saleService;
     private final TicketSettingsRepository ticketSettingsRepository;
 
-    public void generarYImprimirTicket(Long saleId, String printerName) throws Exception {
+    public File generarTicketVenta(Long saleId) throws Exception {
         Sale sale = saleService.getSaleById(saleId);
 
         TicketSettings settings = ticketSettingsRepository.findFirstByOrderByIdAsc()
@@ -47,11 +52,33 @@ public class TicketService {
                 .total(sale.getTotal().doubleValue())
                 .mensajeFinal(settings.getMensajeFinal())
                 .url(settings.getUrl())
-                .impresora(printerName)
+                .impresora(settings.getImpresora())
+                .cajero(sale.getVendedorName())
+                .clientName(sale.getClient().getName())
+                .folio(sale.getId())
+                .isCreditSale(sale.isCreditSale())
                 .build();
 
-        File pdf = TicketPDFGenerator.generarTicketPDF(request);
-        PrinterService.imprimirPDF(pdf, printerName);
+        return TicketPDFGenerator.generarTicketPDF(request);
+    }
+
+    public void ImprimirTicket(File ticket) throws Exception {
+        PrinterService.imprimirPDF(ticket, ticketSettingsRepository.getImpresora());
+    }
+
+    public File generarTicketCorte(CorteDto corteDto, LocalDateTime start, LocalDateTime finish) throws Exception{
+        TicketSettings settings = ticketSettingsRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
+        log.info(corteDto.toString());
+        return TicketPDFGenerator.generarTicketCortePDF(settings, corteDto, start,
+                saleService.countSalesInRange(start,finish));
+    }
+
+    public File generarTicketSaldos(List<Client> clients) throws Exception{
+        TicketSettings settings = ticketSettingsRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
+
+        return TicketPDFGenerator.generarTicketSaldosPDF(settings, clients);
     }
 
     //CRUD
@@ -79,6 +106,16 @@ public class TicketService {
         existingSettings.setUrl(settings.getUrl());
 
         return ticketSettingsRepository.save(existingSettings);
+    }
+
+    @Transactional
+    public String updateImpresora(String impresora){
+        TicketSettings existingSettings = ticketSettingsRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("Configuración de ticket no encontrada"));
+
+        existingSettings.setImpresora(impresora);
+        ticketSettingsRepository.save(existingSettings);
+        return "Impresora actualizada exitosamente.";
     }
 
 

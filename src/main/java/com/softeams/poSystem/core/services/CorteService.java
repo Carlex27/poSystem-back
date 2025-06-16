@@ -39,7 +39,8 @@ public class CorteService {
                 ventasPorDepartamentos,
                 dineroEnCaja,
                 ventasTotales,
-                gananciaPorDia
+                gananciaPorDia,
+                abonoService.getResumenAbonos(start, finish)
         );
     }
 

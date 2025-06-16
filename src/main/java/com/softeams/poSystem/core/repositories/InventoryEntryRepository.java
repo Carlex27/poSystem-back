@@ -20,11 +20,14 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
     @Query("""
     SELECT SUM(
         e.precioPorCaja *
-        ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) / e.producto.unidadesPorPresentacion)
+        (
+            ( (e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) * 1.0 )
+            / e.producto.unidadesPorPresentacion
+        )
     )
     FROM InventoryEntry e
     WHERE e.producto.id = :productId
-    AND e.producto.isActive = true
+      AND e.producto.isActive = true
     """)
     BigDecimal calcularValorInventarioDisponiblePorProducto(@Param("productId") Long productId);
 
@@ -32,7 +35,10 @@ public interface InventoryEntryRepository extends JpaRepository<InventoryEntry, 
     @Query("""
     SELECT SUM(
         e.precioPorCaja *
-        ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) / e.producto.unidadesPorPresentacion)
+        (
+            ((e.cajasCompradas * e.producto.unidadesPorPresentacion - e.unidadesVendidas) * 1.0)
+            / e.producto.unidadesPorPresentacion
+        )
     )
     FROM InventoryEntry e
     WHERE e.producto.isActive = true

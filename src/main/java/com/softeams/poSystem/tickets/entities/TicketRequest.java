@@ -25,4 +25,8 @@ public class TicketRequest {
     private String mensajeFinal;
     private String url;
     private String impresora;
+    private String clientName;
+    private String cajero;
+    private Long folio;
+    private boolean isCreditSale;
 }
