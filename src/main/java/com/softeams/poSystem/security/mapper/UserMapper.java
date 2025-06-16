@@ -33,10 +33,11 @@ public class UserMapper implements IUserMapper {
     }
 
     public UserDto convertToDto(User user) {
+        String rol = user.getRoles().contains("ROLE_ADMIN") ? "Administrador" : "Vendedor";
         return new UserDto(
                 user.getId(),
                 user.getUsername(),
-                user.getRoles(),
+                rol,
                 user.getCreatedAt()
         );
     }
